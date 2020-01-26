@@ -1,6 +1,6 @@
 /**
  * jQuery.marquee - scrolling text like old marquee element
- * @author Aamir Afridi - aamirafridi(at)gmail(dot)com / http://aamirafridi.com/jquery/jquery-marquee-plugin
+ * @author Original: Aamir Afridi - aamirafridi(at)gmail(dot)com | Current: Deggial
  */
 
 (function (factory) {
@@ -16,7 +16,7 @@
             // Extend the options if any provided
             var o = $.extend({}, $.fn.marquee.defaults, options),
                 $this = $(this),
-                $marqueeWrapper, containerWidth, animationCss, verticalDir, elWidth,
+                $marqueeWrapper, containerWidth, containerHeight, animationCss, verticalDir, elWidth, elHeight,
                 loopCount = 3,
                 playState = "animation-play-state",
                 css3AnimationIsSupported = false,
@@ -155,7 +155,7 @@
                 "float": "left"
             });
             
-            totalWidth += $this.width();
+            totalWidth += ($this.width() + 1000);
 
             if (o.duplicated) {
                 $el.clone(true).appendTo($this);
@@ -169,59 +169,78 @@
             $marqueeWrapper = $this.find(".js-marquee-wrapper");
 
             // If direction is up or down, get the height of main element
-            if (verticalDir) {
-                var containerHeight = $this.height();
-                $marqueeWrapper.removeAttr("style");
-                $this.height(containerHeight);
-
-                // Change the CSS for js-marquee element
-                $this.find(".js-marquee").css({
-                    "float": "none",
-                    "margin-bottom": o.gap,
-                    "margin-right": 0
-                });
-
-                // Remove bottom margin from 2nd element if duplicated
-                if (o.duplicated) {
-		    $this.find(".js-marquee:last").css({
-			"margin-bottom": 0
-		    });
-		}
-
-                var elHeight = $this.find(".js-marquee:first").height() + o.gap;
-
-                // adjust the animation duration according to the text length
-                if (o.startVisible && !o.duplicated) {
-                    // Compute the complete animation duration and save it for later reference
-                    // formula is to: (Height of the text node + height of the main container / Height of the main container) * duration;
-                    o._completeDuration = ((parseInt(elHeight, 10) + parseInt(containerHeight, 10)) / parseInt(containerHeight, 10)) * o.duration;
-
-                    // formula is to: (Height of the text node / height of the main container) * duration
-                    o.duration = (parseInt(elHeight, 10) / parseInt(containerHeight, 10)) * o.duration;
-                } else {
-                    // formula is to: (Height of the text node + height of the main container / Height of the main container) * duration;
-                    o.duration = ((parseInt(elHeight, 10) + parseInt(containerHeight, 10)) / parseInt(containerHeight, 10)) * o.duration;
-                }
-
-            } else {
-                // Save the width of the each element so we can use it in animation
-                elWidth = $this.find(".js-marquee:first").width() + o.gap;
-
-                // container width
-                containerWidth = $this.width();
-
-                // adjust the animation duration according to the text length
-                if (o.startVisible && !o.duplicated) {
-                    // Compute the complete animation duration and save it for later reference
-                    // formula is to: (Width of the text node + width of the main container / Width of the main container) * duration;
-                    o._completeDuration = ((parseInt(elWidth, 10) + parseInt(containerWidth, 10)) / parseInt(containerWidth, 10)) * o.duration;
-
-                    // (Width of the text node / width of the main container) * duration
-                    o.duration = (parseInt(elWidth, 10) / parseInt(containerWidth, 10)) * o.duration;
-                } else {
-                    // formula is to: (Width of the text node + width of the main container / Width of the main container) * duration;
-                    o.duration = ((parseInt(elWidth, 10) + parseInt(containerWidth, 10)) / parseInt(containerWidth, 10)) * o.duration;
-                }
+            
+            switch (verticalDir)
+            {
+                //Vertical Direction
+                case true:
+                    containerHeight = $this.height();
+                    $marqueeWrapper.removeAttr("style");
+                    $this.height(containerHeight);
+                    
+                    // Change the CSS for js-marquee element
+                    $this.find(".js-marquee").css({
+                        "float": "none",
+                        "margin-bottom": o.gap,
+                        "margin-right": 0
+                    });
+                    
+                    // Remove bottom margin from 2nd element if duplicated
+                    switch(o.duplicated)
+                    {
+                        case true:
+            		        $this.find(".js-marquee:last").css({"margin-bottom": 0});
+            		        break;
+                    }
+                    
+                    elHeight = $this.find(".js-marquee:first").height() + o.gap;
+                    
+                    // adjust the animation duration according to the text length
+                    switch(o.startVisible && !o.duplicated)
+                    {
+                        case true:
+                            // Compute the complete animation duration and save it for later reference
+                            // formula is to: (Height of the text node + height of the main container / Height of the main container) * duration;
+                            o._completeDuration = ((parseInt(elHeight, 10) + parseInt(containerHeight, 10)) / parseInt(containerHeight, 10)) * o.duration;
+        
+                            // formula is to: (Height of the text node / height of the main container) * duration
+                            o.duration = (parseInt(elHeight, 10) / parseInt(containerHeight, 10)) * o.duration;
+                            break;
+                            
+                        case false:
+                            // formula is to: (Height of the text node + height of the main container / Height of the main container) * duration;
+                            o.duration = ((parseInt(elHeight, 10) + parseInt(containerHeight, 10)) / parseInt(containerHeight, 10)) * o.duration;
+                            break;
+                    }
+                    
+                    break;
+                    
+                //Horizontal Direction
+                case false:
+                    // Save the width of the each element so we can use it in animation
+                    elWidth = $this.find(".js-marquee:first").width() + o.gap;
+                    
+                    // container width
+                    containerWidth = $this.width();
+    
+                    // adjust the animation duration according to the text length
+                    switch(o.startVisible && !o.duplicated)
+                    {
+                        case true:
+                            // Compute the complete animation duration and save it for later reference
+                            // formula is to: (Width of the text node + width of the main container / Width of the main container) * duration;
+                            o._completeDuration = ((parseInt(elWidth, 10) + parseInt(containerWidth, 10)) / parseInt(containerWidth, 10)) * o.duration;
+        
+                            // (Width of the text node / width of the main container) * duration
+                            o.duration = (parseInt(elWidth, 10) / parseInt(containerWidth, 10)) * o.duration;
+                            break;
+                            
+                        case false:
+                            // formula is to: (Width of the text node + width of the main container / Width of the main container) * duration;
+                            o.duration = ((parseInt(elWidth, 10) + parseInt(containerWidth, 10)) / parseInt(containerWidth, 10)) * o.duration;
+                            break;
+                    }
+                    break;
             }
 
             // if duplicated then reduce the duration
@@ -231,7 +250,7 @@
 
             if (o.allowCss3Support) {
                 var elm = document.body || document.createElement("div"),
-                    animationName = "marqueeAnimation-" + Math.floor(Math.random() * 10000000),
+                    animationName = "marqueeAnimation-" + Math.floor(Math.random() * 1e7),
                     domPrefixes = "Webkit Moz O ms Khtml".split(" "),
                     animationString = "animation",
                     animationCss3Str = "",
@@ -261,197 +280,255 @@
                     $this.data("css3AnimationIsSupported", true);
                 }
             }
-
-            var _rePositionVertically = function() {
-                $marqueeWrapper.css("transform", "translateY(" + (o.direction === "up" ? containerHeight + "px" : "-" + elHeight + "px") + ")");
-            },
-            _rePositionHorizontally = function() {
-                $marqueeWrapper.css("transform", "translateX(" + (o.direction === "left" ? containerWidth + "px" : "-" + elWidth + "px") + ")");
+            
+            var _generateCssData = function(property,value,prefix="",suffix="")
+            {
+                var data = {"property" : "", "value" : ""};
+                data["property"] = property;
+                value = prefix.concat(value,suffix);
+                data["value"] = value;
+                return data;
+            };
+            
+            var _generateAnimationCss = function(value, vertical = false)
+            {
+                var data = css3AnimationIsSupported ? (vertical ? _generateCssData("transform", value, "translateY(", ")") : _generateCssData("transform", value, "translateX(", ")")) : (vertical ? _generateCssData("margin-top", value) : _generateCssData("margin-left", value));
+                var property = data["property"];
+                value = data["value"];
+                var obj = {};
+                obj[property] = value;
+                return obj;
+            };
+            
+            var _setElementCss = function(element, value, vertical = false)
+            {
+                var data = css3AnimationIsSupported ? (vertical ? _generateCssData("transform", value, "translateY(" , ")") : _generateCssData("transform", value, "translateX(" , ")")) : (vertical ? _generateCssData("margin-top", value) : _generateCssData("margin-left", value));
+                element.css(data["property"], data["value"]);
             };
 
-            // if duplicated option is set to true than position the wrapper
-            if (o.duplicated) {
-                if (verticalDir) {
-                    if (o.startVisible) {
-                        $marqueeWrapper.css("transform", "translateY(0)");
-                    } else {
-                        $marqueeWrapper.css("transform", "translateY(" + (o.direction === "up" ? containerHeight + "px" : "-" + ((elHeight * 2) - o.gap) + "px") + ")");
+            var _rePositionVertically = function() {
+                _setElementCss($marqueeWrapper, (o.direction === "up" ? containerHeight + "px" : "-" + elHeight + "px"), true);
+            },
+            _rePositionHorizontally = function() {
+                _setElementCss($marqueeWrapper, (o.direction === "left" ? containerWidth + "px" : "-" + elWidth + "px"));
+            };
+            
+            switch (true)
+            {
+                case o.duplicated:
+                    // if duplicated option is set to true than position the wrapper
+                    var data;
+                    var value;
+                    switch(verticalDir)
+                    {
+                        case true:
+                            o.startVisible ? _setElementCss($marqueeWrapper, 0, true) : _setElementCss($marqueeWrapper, (o.direction === "up" ? containerHeight + "px" : "-" + ((elHeight * 2) - o.gap) + "px"), true);
+                            break;
+                            
+                        default:
+                            o.startVisible ? _setElementCss($marqueeWrapper, 0) : _setElementCss($marqueeWrapper, (o.direction === "left" ? containerWidth + "px" : "-" + ((elWidth * 2) - o.gap) + "px"));
+                            break;
                     }
-                } else {
-                    if (o.startVisible) {
-                        $marqueeWrapper.css("transform", "translateX(0)");
-                    } else {
-                        $marqueeWrapper.css("transform", "translateX(" + (o.direction === "left" ? containerWidth + "px" : "-" + ((elWidth * 2) - o.gap) + "px") + ")");
-                    }
-                }
-
-                // If the text starts out visible we can skip the two initial loops
-                if (!o.startVisible) {
-                  loopCount = 1;
-                }
-            } else if (o.startVisible) {
-                // We only have two different loops if marquee is duplicated and starts visible
-                loopCount = 2;
-            } else {
-                if (verticalDir) {
-                    _rePositionVertically();
-                } else {
-                    _rePositionHorizontally();
-                }
+    
+                    // If the text starts out visible we can skip the two initial loops
+                    loopCount = o.startVisible ? loopCount : 1;
+                    break;
+                    
+                case o.startVisible:
+                    // We only have two different loops if marquee is duplicated and starts visible
+                    loopCount = 2;
+                    break;
+                    
+                default:
+                    verticalDir ? _rePositionVertically() : _rePositionHorizontally();
+                    break;
             }
 
             // Animate recursive method
             var animate = function() {
-                if (o.duplicated) {
-                    // When duplicated, the first loop will be scroll longer so double the duration
-                    if (loopCount === 1) {
-                        o._originalDuration = o.duration;
-                        if (verticalDir) {
-                            o.duration = o.direction === "up" ? o.duration + (containerHeight / ((elHeight) / o.duration)) : o.duration * 2;
-                        } else {
-                            o.duration = o.direction === "left" ? o.duration + (containerWidth / ((elWidth) / o.duration)) : o.duration * 2;
-                        }
-                        // Adjust the css3 animation as well
-                        if (animationCss3Str) {
-                            animationCss3Str = animationName + " " + o.duration / 1000 + "s " + o.delayBeforeStart / 1000 + "s " + o.css3easing;
-                        }
-                        loopCount++;
-                    }
-                    // On 2nd loop things back to normal, normal duration for the rest of animations
-                    else if (loopCount === 2) {
-                        o.duration = o._originalDuration;
-                        // Adjust the css3 animation as well
-                        if (animationCss3Str) {
-                            animationName = animationName + "0";
-                            keyframeString = $.trim(keyframeString) + "0 ";
-                            animationCss3Str = animationName + " " + o.duration / 1000 + "s 0s infinite " + o.css3easing;
-                        }
-                        loopCount++;
-                    }
-                }
-
-                if (verticalDir) {
-                    if (o.duplicated) {
-
-                        // Adjust the starting point of animation only when first loops finishes
-                        if (loopCount > 2) {
-                            $marqueeWrapper.css("transform", "translateY(" + (o.direction === "up" ? 0 : "-" + elHeight + "px") + ")");
-                        }
-
-                        animationCss = {
-                            "transform": "translateY(" + (o.direction === "up" ? "-" + elHeight + "px" : 0) + ")"
-                        };
-                    } else if (o.startVisible) {
-                        // This loop moves the marquee out of the container
-                        if (loopCount === 2) {
+                
+                switch(o.duplicated)
+                {
+                    case true:
+                        // When duplicated, the first loop will be scroll longer so double the duration
+                        if (loopCount === 1)
+                        {
+                            o._originalDuration = o.duration;
+                            if (verticalDir)
+                            {
+                                o.duration = o.direction === "up" ? o.duration + (containerHeight / ((elHeight) / o.duration)) : o.duration * 2;
+                            }
+                            else
+                            {
+                                o.duration = o.direction === "left" ? o.duration + (containerWidth / ((elWidth) / o.duration)) : o.duration * 2;
+                            }
                             // Adjust the css3 animation as well
                             if (animationCss3Str) {
                                 animationCss3Str = animationName + " " + o.duration / 1000 + "s " + o.delayBeforeStart / 1000 + "s " + o.css3easing;
                             }
-                            animationCss = {
-                                "transform": "translateY(" + (o.direction === "up" ? "-" + elHeight + "px" : containerHeight + "px") + ")"
-                            };
                             loopCount++;
-                        } else if (loopCount === 3) {
-                            // Set the duration for the animation that will run forever
-                            o.duration = o._completeDuration;
-                            // Adjust the css3 animation as well
-                            if (animationCss3Str) {
-                                    animationName = animationName + "0";
-                                    keyframeString = $.trim(keyframeString) + "0 ";
-                                    animationCss3Str = animationName + " " + o.duration / 1000 + "s 0s infinite " + o.css3easing;
-                            }
-                            _rePositionVertically();
                         }
-                    } else {
-                        _rePositionVertically();
-                        animationCss = {
-                            "transform": "translateY(" + (o.direction === "up" ? "-" + ($marqueeWrapper.height()) + "px" : containerHeight + "px") + ")"
-                        };
-                    }
-                } else {
-                    if (o.duplicated) {
-
-                        // Adjust the starting point of animation only when first loops finishes
-                        if (loopCount > 2) {
-                            $marqueeWrapper.css("transform", "translateX(" + (o.direction === "left" ? 0 : "-" + elWidth + "px") + ")");
-                        }
-
-                        animationCss = {
-                            "transform": "translateX(" + (o.direction === "left" ? "-" + elWidth + "px" : 0) + ")"
-                        };
-
-                    } else if (o.startVisible) {
-                        // This loop moves the marquee out of the container
-                        if (loopCount === 2) {
-                            // Adjust the css3 animation as well
-                            if (animationCss3Str) {
-                                animationCss3Str = animationName + " " + o.duration / 1000 + "s " + o.delayBeforeStart / 1000 + "s " + o.css3easing;
-                            }
-                            animationCss = {
-                                "transform": "translateX(" + (o.direction === "left" ? "-" + elWidth + "px" : containerWidth + "px") + ")"
-                            };
-                            loopCount++;
-                        } else if (loopCount === 3) {
-                            // Set the duration for the animation that will run forever
-                            o.duration = o._completeDuration;
+                        // On 2nd loop things back to normal, normal duration for the rest of animations
+                        else if (loopCount === 2)
+                        {
+                            o.duration = o._originalDuration;
                             // Adjust the css3 animation as well
                             if (animationCss3Str) {
                                 animationName = animationName + "0";
                                 keyframeString = $.trim(keyframeString) + "0 ";
                                 animationCss3Str = animationName + " " + o.duration / 1000 + "s 0s infinite " + o.css3easing;
                             }
-                            _rePositionHorizontally();
+                            loopCount++;
                         }
-                    } else {
-                        _rePositionHorizontally();
-                        animationCss = {
-                            "transform": "translateX(" + (o.direction === "left" ? "-" + elWidth + "px" : containerWidth + "px") + ")"
-                        };
-                    }
+                        break;
+                }
+                
+                switch(verticalDir)
+                {
+                    //Vertical Direction
+                    case true:
+                        switch(true)
+                        {
+                            case o.duplicated:
+                                // Adjust the starting point of animation only when first loops finishes
+                                if (loopCount > 2) {
+                                    _setElementCss($marqueeWrapper, (o.direction === "up" ? 0 : "-" + elHeight + "px"), true);
+                                }
+                                
+                                animationCss = _generateAnimationCss((o.direction === "up" ? "-" + elHeight + "px" : 0), true);
+                                break;
+                                
+                            case o.startVisible:
+                                
+                                switch(loopCount)
+                                {
+                                    // This loop moves the marquee out of the container
+                                    case 2:
+                                        // Adjust the css3 animation as well
+                                        if (animationCss3Str) {
+                                            animationCss3Str = animationName + " " + o.duration / 1000 + "s " + o.delayBeforeStart / 1000 + "s " + o.css3easing;
+                                        }
+                                        
+                                        animationCss = _generateAnimationCss((o.direction === "up" ? "-" + elHeight + "px" : containerHeight + "px"), true);
+                                        loopCount++;
+                                        break;
+                                        
+                                    case 3:
+                                        // Set the duration for the animation that will run forever
+                                        o.duration = o._completeDuration;
+                                        // Adjust the css3 animation as well
+                                        if (animationCss3Str) {
+                                                animationName = animationName + "0";
+                                                keyframeString = $.trim(keyframeString) + "0 ";
+                                                animationCss3Str = animationName + " " + o.duration / 1000 + "s 0s infinite " + o.css3easing;
+                                        }
+                                        _rePositionVertically();
+                                        break;
+                                }
+                                break;
+                                
+                            default:
+                                _rePositionVertically();
+                                animationCss = _generateAnimationCss((o.direction === "up" ? "-" + ($marqueeWrapper.height()) + "px" : containerHeight + "px"), true);
+                        }
+                        break;
+                        
+                    //Horizontal Direction
+                    default:
+                        switch(true)
+                        {
+                            case o.duplicated:
+                                // Adjust the starting point of animation only when first loops finishes
+                                if (loopCount > 2) {
+                                    _setElementCss($marqueeWrapper, (o.direction === "left" ? 0 : "-" + elWidth + "px"));
+                                }
+        
+                                animationCss = _generateAnimationCss((o.direction === "left" ? "-" + elWidth + "px" : 0));
+                                break;
+                                
+                            case o.startVisible:
+                                
+                                switch(loopCount)
+                                {
+                                    // This loop moves the marquee out of the container
+                                    case 2:
+                                        // Adjust the css3 animation as well
+                                        if (animationCss3Str) {
+                                            animationCss3Str = animationName + " " + o.duration / 1000 + "s " + o.delayBeforeStart / 1000 + "s " + o.css3easing;
+                                        }
+                                        
+                                        animationCss = _generateAnimationCss((o.direction === "left" ? "-" + elWidth + "px" : containerWidth + "px"));
+                                        loopCount++;
+                                        break;
+                                        
+                                    case 3:
+                                        // Set the duration for the animation that will run forever
+                                        o.duration = o._completeDuration;
+                                        // Adjust the css3 animation as well
+                                        if (animationCss3Str) {
+                                            animationName = animationName + "0";
+                                            keyframeString = $.trim(keyframeString) + "0 ";
+                                            animationCss3Str = animationName + " " + o.duration / 1000 + "s 0s infinite " + o.css3easing;
+                                        }
+                                        _rePositionHorizontally();
+                                        break;
+                                }
+                                break;
+                                
+                            default:
+                                _rePositionHorizontally();
+                                animationCss = _generateAnimationCss((o.direction === "left" ? "-" + elWidth + "px" : containerWidth + "px"));
+                                break;
+                        }
+                        break;
                 }
 
                 // fire event
                 $this.trigger("beforeStarting");
 
                 // If css3 support is available than do it with css3, otherwise use jQuery as fallback
-                if (css3AnimationIsSupported) {
-                    // Add css3 animation to the element
-                    $marqueeWrapper.css(animationString, animationCss3Str);
-                    var keyframeCss = keyframeString + " { 100%  " + _objToString(animationCss) + "}",
-                         $styles = $marqueeWrapper.find("style");
-
-                    // Now add the keyframe animation to the marquee element
-                    if ($styles.length !== 0) {
-                        // Bug fixed for jQuery 1.3.x - Instead of using .last(), use following
-                        $styles.filter(":last").html(keyframeCss);
-                    } else {
-                        $("head").append("<style>" + keyframeCss + "</style>");
-                    }
-
-                    // Animation iteration event
-                    _prefixedEvent($marqueeWrapper[0], "AnimationIteration", function() {
-                        $this.trigger("finished");
-                    });
-                    // Animation stopped
-                    _prefixedEvent($marqueeWrapper[0], "AnimationEnd", function() {
-                        animate();
-                        $this.trigger("finished");
-                    });
-
-                } else {
-                    // Start animating
-                    $marqueeWrapper.animate(animationCss, o.duration, o.easing, function() {
-                        // fire event
-                        $this.trigger("finished");
-                        // animate again
-                        if (o.pauseOnCycle) {
-                            _startAnimationWithDelay();
+                switch(css3AnimationIsSupported)
+                {
+                    case true:
+                        // Add css3 animation to the element
+                        $marqueeWrapper.css(animationString, animationCss3Str);
+                        var keyframeCss = keyframeString + " { 100%  " + _objToString(animationCss) + "}",
+                             $styles = $marqueeWrapper.find("style");
+    
+                        // Now add the keyframe animation to the marquee element
+                        if ($styles.length !== 0) {
+                            // Bug fixed for jQuery 1.3.x - Instead of using .last(), use following
+                            $styles.filter(":last").html(keyframeCss);
                         } else {
-                            animate();
+                            $("head").append("<style>" + keyframeCss + "</style>");
                         }
-                    });
+    
+                        // Animation iteration event
+                        _prefixedEvent($marqueeWrapper[0], "AnimationIteration", function() {
+                            $this.trigger("finished");
+                        });
+                        // Animation stopped
+                        _prefixedEvent($marqueeWrapper[0], "AnimationEnd", function() {
+                            animate();
+                            $this.trigger("finished");
+                        });
+                        break;
+                        
+                    default:
+                        // Start animating
+                        $marqueeWrapper.animate(animationCss, o.duration, o.easing, function() {
+                            // fire event
+                            $this.trigger("finished");
+                            // animate again
+                            if (o.pauseOnCycle) {
+                                _startAnimationWithDelay();
+                            } else {
+                                animate();
+                            }
+                        });
+                        break;
                 }
+                
                 // save the status
                 $this.data("runningStatus", "resumed");
             };
