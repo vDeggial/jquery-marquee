@@ -281,8 +281,10 @@
                 }
             }
             
-            var _generateCssData = function(property,value,prefix="",suffix="")
+            var _generateCssData = function(property,value,prefix,suffix)
             {
+                prefix = prefix || "";
+                suffix = suffix || "";
                 var data = {"property" : "", "value" : ""};
                 data["property"] = property;
                 value = prefix.concat(value,suffix);
@@ -290,8 +292,9 @@
                 return data;
             };
             
-            var _generateAnimationCss = function(value, vertical = false)
+            var _generateAnimationCss = function(value, vertical)
             {
+                vertical = vertical || false;
                 var data = css3AnimationIsSupported ? (vertical ? _generateCssData("transform", value, "translateY(", ")") : _generateCssData("transform", value, "translateX(", ")")) : (vertical ? _generateCssData("margin-top", value) : _generateCssData("margin-left", value));
                 var property = data["property"];
                 value = data["value"];
@@ -300,8 +303,9 @@
                 return obj;
             };
             
-            var _setElementCss = function(element, value, vertical = false)
+            var _setElementCss = function(element, value, vertical)
             {
+                vertical = vertical || false;
                 var data = css3AnimationIsSupported ? (vertical ? _generateCssData("transform", value, "translateY(" , ")") : _generateCssData("transform", value, "translateX(" , ")")) : (vertical ? _generateCssData("margin-top", value) : _generateCssData("margin-left", value));
                 element.css(data["property"], data["value"]);
             };
