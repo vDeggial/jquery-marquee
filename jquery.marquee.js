@@ -166,6 +166,8 @@
 
             // Save the reference of the wrapper
             $marqueeWrapper = $this.find(".js-marquee-wrapper");
+            
+            $marqueeWrapper.css("will-change", "transform");
 
             // If direction is up or down, get the height of main element
             
