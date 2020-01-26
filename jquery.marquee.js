@@ -309,6 +309,20 @@
                 var data = css3AnimationIsSupported ? (vertical ? _generateCssData("transform", value, "translateY(" , ")") : _generateCssData("transform", value, "translateX(" , ")")) : (vertical ? _generateCssData("margin-top", value) : _generateCssData("margin-left", value));
                 element.css(data["property"], data["value"]);
             };
+            
+            var _setInfiniteAnimation = function()
+            {
+                // Set the duration for the animation that will run forever
+                o.duration = o._completeDuration;
+                // Adjust the css3 animation as well
+                if (animationCss3Str)
+                {
+                    animationName = animationName + "0";
+                    keyframeString = $.trim(keyframeString) + "0 ";
+                    animationCss3Str = animationName + " " + o.duration / 1000 + "s 0s infinite " + o.css3easing;
+                }  
+            };
+            
 
             var _rePositionVertically = function() {
                 _setElementCss($marqueeWrapper, (o.direction === "up" ? containerHeight + "px" : "-" + elHeight + "px"), true);
@@ -419,13 +433,7 @@
                                         
                                     case 3:
                                         // Set the duration for the animation that will run forever
-                                        o.duration = o._completeDuration;
-                                        // Adjust the css3 animation as well
-                                        if (animationCss3Str) {
-                                                animationName = animationName + "0";
-                                                keyframeString = $.trim(keyframeString) + "0 ";
-                                                animationCss3Str = animationName + " " + o.duration / 1000 + "s 0s infinite " + o.css3easing;
-                                        }
+                                        _setInfiniteAnimation();
                                         _rePositionVertically();
                                         break;
                                 }
@@ -467,13 +475,7 @@
                                         
                                     case 3:
                                         // Set the duration for the animation that will run forever
-                                        o.duration = o._completeDuration;
-                                        // Adjust the css3 animation as well
-                                        if (animationCss3Str) {
-                                            animationName = animationName + "0";
-                                            keyframeString = $.trim(keyframeString) + "0 ";
-                                            animationCss3Str = animationName + " " + o.duration / 1000 + "s 0s infinite " + o.css3easing;
-                                        }
+                                        _setInfiniteAnimation();
                                         _rePositionHorizontally();
                                         break;
                                 }
