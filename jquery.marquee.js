@@ -323,6 +323,17 @@
                 }  
             };
             
+            var _resetAnimation = function()
+            {
+                o.duration = o._originalDuration;
+                // Adjust the css3 animation as well
+                if (animationCss3Str) {
+                    animationName = animationName + "0";
+                    keyframeString = $.trim(keyframeString) + "0 ";
+                    animationCss3Str = animationName + " " + o.duration / 1000 + "s 0s infinite " + o.css3easing;
+                }  
+            };
+            
 
             var _rePositionVertically = function() {
                 _setElementCss($marqueeWrapper, (o.direction === "up" ? containerHeight + "px" : "-" + elHeight + "px"), true);
@@ -389,13 +400,7 @@
                         // On 2nd loop things back to normal, normal duration for the rest of animations
                         else if (loopCount === 2)
                         {
-                            o.duration = o._originalDuration;
-                            // Adjust the css3 animation as well
-                            if (animationCss3Str) {
-                                animationName = animationName + "0";
-                                keyframeString = $.trim(keyframeString) + "0 ";
-                                animationCss3Str = animationName + " " + o.duration / 1000 + "s 0s infinite " + o.css3easing;
-                            }
+                            _resetAnimation();
                             loopCount++;
                         }
                         break;
@@ -459,7 +464,7 @@
                                 break;
                                 
                             case o.startVisible:
-                                
+                                o.duration = o._originalDuration;
                                 switch(loopCount)
                                 {
                                     // This loop moves the marquee out of the container
