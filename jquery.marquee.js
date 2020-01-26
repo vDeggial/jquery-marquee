@@ -144,7 +144,7 @@
             verticalDir = o.direction === "up" || o.direction === "down";
 
             // no gap if not duplicated
-            o.gap = o.duplicated ? parseInt(o.gap) : 0;
+            o.gap = o.duplicated ? parseInt(o.gap, 10) : 0;
 
             // wrap inner content into a div
             $this.wrapInner("<div class='js-marquee'></div>");
