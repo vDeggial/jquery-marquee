@@ -310,28 +310,29 @@
                 element.css(data["property"], data["value"]);
             };
             
-            var _setInfiniteAnimation = function()
+            var _adjustAnimation = function()
             {
-                // Set the duration for the animation that will run forever
-                o.duration = o._completeDuration;
-                // Adjust the css3 animation as well
                 if (animationCss3Str)
                 {
                     animationName = animationName + "0";
                     keyframeString = $.trim(keyframeString) + "0 ";
                     animationCss3Str = animationName + " " + o.duration / 1000 + "s 0s infinite " + o.css3easing;
-                }  
+                }
+            };
+            
+            var _setInfiniteAnimation = function()
+            {
+                // Set the duration for the animation that will run forever
+                o.duration = o._completeDuration;
+                // Adjust the css3 animation as well
+                _adjustAnimation();  
             };
             
             var _resetAnimation = function()
             {
                 o.duration = o._originalDuration;
                 // Adjust the css3 animation as well
-                if (animationCss3Str) {
-                    animationName = animationName + "0";
-                    keyframeString = $.trim(keyframeString) + "0 ";
-                    animationCss3Str = animationName + " " + o.duration / 1000 + "s 0s infinite " + o.css3easing;
-                }  
+                _adjustAnimation();  
             };
             
 
