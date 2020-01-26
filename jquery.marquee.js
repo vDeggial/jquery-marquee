@@ -78,7 +78,7 @@
                         $this.trigger("resumed");
                     },
 
-                    toggle: function() {u
+                    toggle: function() {
                         methods[$this.data("runningStatus") === "resumed" ? "pause" : "resume"]();
                     },
 
