@@ -115,8 +115,7 @@
             /* Check if element has data attributes. They have top priority
                For details https://twitter.com/aamirafridi/status/403848044069679104 - Can't find a better solution :/
                jQuery 1.3.2 doesn't support $.data().KEY hence writting the following */
-            var dataAttributes = {},
-            attr;
+            var attr;
             $.each(o, function(key) {
                 // Check if element has this data attribute
                 attr = $this.attr("data-" + key);
@@ -286,9 +285,9 @@
                 prefix = prefix || "";
                 suffix = suffix || "";
                 var data = {"property" : "", "value" : ""};
-                data["property"] = property;
+                data.property = property;
                 value = prefix.concat(value,suffix);
-                data["value"] = value;
+                data.value = value;
                 return data;
             };
             
@@ -296,8 +295,8 @@
             {
                 vertical = vertical || false;
                 var data = css3AnimationIsSupported ? (vertical ? _generateCssData("transform", value, "translateY(", ")") : _generateCssData("transform", value, "translateX(", ")")) : (vertical ? _generateCssData("margin-top", value) : _generateCssData("margin-left", value));
-                var property = data["property"];
-                value = data["value"];
+                var property = data.property;
+                value = data.value;
                 var obj = {};
                 obj[property] = value;
                 return obj;
@@ -307,7 +306,7 @@
             {
                 vertical = vertical || false;
                 var data = css3AnimationIsSupported ? (vertical ? _generateCssData("transform", value, "translateY(" , ")") : _generateCssData("transform", value, "translateX(" , ")")) : (vertical ? _generateCssData("margin-top", value) : _generateCssData("margin-left", value));
-                element.css(data["property"], data["value"]);
+                element.css(data.property, data.value);
             };
             
             var _adjustAnimation = function()
@@ -355,8 +354,6 @@
             {
                 case o.duplicated:
                     // if duplicated option is set to true than position the wrapper
-                    var data;
-                    var value;
                     switch(verticalDir)
                     {
                         case true:
