@@ -78,7 +78,7 @@
                         $this.trigger("resumed");
                     },
 
-                    toggle: function() {
+                    toggle: function() {u
                         methods[$this.data("runningStatus") === "resumed" ? "pause" : "resume"]();
                     },
 
@@ -257,14 +257,14 @@
                     keyframeString = "";
 
                 // Check css3 support
-                if (elm.style.animation !== undefined) {
+                if (typeof elm.style.animation !== "undefined") {
                     keyframeString = "@keyframes " + animationName + " ";
                     css3AnimationIsSupported = true;
                 }
 
                 if (css3AnimationIsSupported === false) {
                     for (var i = 0; i < domPrefixes.length; i++) {
-                        if (elm.style[domPrefixes[i] + "AnimationName"] !== undefined) {
+                        if (typeof elm.style[domPrefixes[i] + "AnimationName"] !== "undefined") {
                             var prefix = "-" + domPrefixes[i].toLowerCase() + "-";
                             animationString = prefix + animationString;
                             playState = prefix + playState;
