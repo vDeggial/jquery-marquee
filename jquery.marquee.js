@@ -318,6 +318,14 @@
                     keyframeString = $.trim(keyframeString) + "0 ";
                     animationCss3Str = animationName + " " + o.duration / 1000 + "s 0s infinite " + o.css3easing;
                 }
+                
+            };
+            
+            var _adjustAnimationDelay = function()
+            {
+                if (animationCss3Str) {
+                    animationCss3Str = animationName + " " + o.duration / 1000 + "s " + o.delayBeforeStart / 1000 + "s " + o.css3easing;
+                }  
             };
             
             var _setInfiniteAnimation = function()
@@ -429,9 +437,7 @@
                                     // This loop moves the marquee out of the container
                                     case 2:
                                         // Adjust the css3 animation as well
-                                        if (animationCss3Str) {
-                                            animationCss3Str = animationName + " " + o.duration / 1000 + "s " + o.delayBeforeStart / 1000 + "s " + o.css3easing;
-                                        }
+                                        _adjustAnimationDelay();
                                         
                                         animationCss = _generateAnimationCss((o.direction === "up" ? "-" + elHeight + "px" : containerHeight + "px"), true);
                                         loopCount++;
@@ -471,9 +477,7 @@
                                     // This loop moves the marquee out of the container
                                     case 2:
                                         // Adjust the css3 animation as well
-                                        if (animationCss3Str) {
-                                            animationCss3Str = animationName + " " + o.duration / 1000 + "s " + o.delayBeforeStart / 1000 + "s " + o.css3easing;
-                                        }
+                                        _adjustAnimationDelay();
                                         
                                         animationCss = _generateAnimationCss((o.direction === "left" ? "-" + elWidth + "px" : containerWidth + "px"));
                                         loopCount++;
