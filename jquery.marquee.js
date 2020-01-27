@@ -392,10 +392,9 @@
                         break;
                 }
             };
-
-            // Animate recursive method
-            var animate = function() {
-                
+            
+            var _prepareAnimateDuplicated = function()
+            {
                 switch(o.duplicated)
                 {
                     case true:
@@ -425,94 +424,106 @@
                         }
                         break;
                 }
+            };
+            
+            var _prepareAnimateVertical = function()
+            {
+                switch(true)
+                {
+                    case o.duplicated:
+                        // Adjust the starting point of animation only when first loops finishes
+                        if (marquee.animation.loopCounter > 2) {
+                            _setElementCss(marquee.outerWrapper.element, (o.direction === "up" ? 0 : "-" + marquee.innerWrapper.height + "px"), true);
+                        }
+                                
+                        marquee.outerWrapper.animationCss = _generateAnimationCss((o.direction === "up" ? "-" + marquee.innerWrapper.height + "px" : 0), true);
+                        break;
+                                
+                    case o.startVisible:
+                        switch(marquee.animation.loopCounter)
+                        {
+                            // This loop moves the marquee out of the container
+                            case 2:
+                                // Adjust the css3 animation as well
+                                _adjustAnimationDelay();
+                                marquee.outerWrapper.animationCss = _generateAnimationCss((o.direction === "up" ? "-" + marquee.innerWrapper.height + "px" : marquee.container.height + "px"), true);
+                                marquee.animation.loopCounter++;
+                                break;
+                                
+                            case 3:
+                                // Set the duration for the animation that will run forever
+                                _setInfiniteAnimation();
+                                _rePositionVertically();
+                                break;
+                        }
+                        break;
+                                
+                    default:
+                        _rePositionVertically();
+                        marquee.outerWrapper.animationCss = _generateAnimationCss((o.direction === "up" ? "-" + (marquee.outerWrapper.element.height()) + "px" : marquee.container.height + "px"), true);
+                }
+            };
+            
+            var _prepareAnimateHorizontal = function()
+            {
+                switch(true)
+                {
+                    case o.duplicated:
+                        // Adjust the starting point of animation only when first loops finishes
+                        if (marquee.animation.loopCounter > 2) {
+                            _setElementCss(marquee.outerWrapper.element, (o.direction === "left" ? 0 : "-" + marquee.innerWrapper.width + "px"));
+                        }
+        
+                        marquee.outerWrapper.animationCss = _generateAnimationCss((o.direction === "left" ? "-" + marquee.innerWrapper.width + "px" : 0));
+                        break;
+                                
+                    case o.startVisible:
+                        o.duration = o._originalDuration;
+                        switch(marquee.animation.loopCounter)
+                        {
+                            // This loop moves the marquee out of the container
+                            case 2:
+                                // Adjust the css3 animation as well
+                                _adjustAnimationDelay();
+                                marquee.outerWrapper.animationCss = _generateAnimationCss((o.direction === "left" ? "-" + marquee.innerWrapper.width + "px" : marquee.container.width + "px"));
+                                marquee.animation.loopCounter++;
+                                break;
+                                        
+                            case 3:
+                                // Set the duration for the animation that will run forever
+                                _setInfiniteAnimation();
+                                _rePositionHorizontally();
+                                break;
+                        }
+                        break;
+                                
+                    default:
+                        _rePositionHorizontally();
+                        marquee.outerWrapper.animationCss = _generateAnimationCss((o.direction === "left" ? "-" + marquee.innerWrapper.width + "px" : marquee.container.width + "px"));
+                        break;
+                }
+            };
+            
+            var _prepareAnimate = function()
+            {
+                _prepareAnimateDuplicated();
                 
                 switch(marquee.isVertical)
                 {
                     //Vertical Direction
                     case true:
-                        switch(true)
-                        {
-                            case o.duplicated:
-                                // Adjust the starting point of animation only when first loops finishes
-                                if (marquee.animation.loopCounter > 2) {
-                                    _setElementCss(marquee.outerWrapper.element, (o.direction === "up" ? 0 : "-" + marquee.innerWrapper.height + "px"), true);
-                                }
-                                
-                                marquee.outerWrapper.animationCss = _generateAnimationCss((o.direction === "up" ? "-" + marquee.innerWrapper.height + "px" : 0), true);
-                                break;
-                                
-                            case o.startVisible:
-                                
-                                switch(marquee.animation.loopCounter)
-                                {
-                                    // This loop moves the marquee out of the container
-                                    case 2:
-                                        // Adjust the css3 animation as well
-                                        _adjustAnimationDelay();
-                                        
-                                        marquee.outerWrapper.animationCss = _generateAnimationCss((o.direction === "up" ? "-" + marquee.innerWrapper.height + "px" : marquee.container.height + "px"), true);
-                                        marquee.animation.loopCounter++;
-                                        break;
-                                        
-                                    case 3:
-                                        // Set the duration for the animation that will run forever
-                                        _setInfiniteAnimation();
-                                        _rePositionVertically();
-                                        break;
-                                }
-                                break;
-                                
-                            default:
-                                _rePositionVertically();
-                                marquee.outerWrapper.animationCss = _generateAnimationCss((o.direction === "up" ? "-" + (marquee.outerWrapper.element.height()) + "px" : marquee.container.height + "px"), true);
-                        }
+                        _prepareAnimateVertical();
                         break;
                         
                     //Horizontal Direction
                     default:
-                        switch(true)
-                        {
-                            case o.duplicated:
-                                // Adjust the starting point of animation only when first loops finishes
-                                if (marquee.animation.loopCounter > 2) {
-                                    _setElementCss(marquee.outerWrapper.element, (o.direction === "left" ? 0 : "-" + marquee.innerWrapper.width + "px"));
-                                }
-        
-                                marquee.outerWrapper.animationCss = _generateAnimationCss((o.direction === "left" ? "-" + marquee.innerWrapper.width + "px" : 0));
-                                break;
-                                
-                            case o.startVisible:
-                                o.duration = o._originalDuration;
-                                switch(marquee.animation.loopCounter)
-                                {
-                                    // This loop moves the marquee out of the container
-                                    case 2:
-                                        // Adjust the css3 animation as well
-                                        _adjustAnimationDelay();
-                                        
-                                        marquee.outerWrapper.animationCss = _generateAnimationCss((o.direction === "left" ? "-" + marquee.innerWrapper.width + "px" : marquee.container.width + "px"));
-                                        marquee.animation.loopCounter++;
-                                        break;
-                                        
-                                    case 3:
-                                        // Set the duration for the animation that will run forever
-                                        _setInfiniteAnimation();
-                                        _rePositionHorizontally();
-                                        break;
-                                }
-                                break;
-                                
-                            default:
-                                _rePositionHorizontally();
-                                marquee.outerWrapper.animationCss = _generateAnimationCss((o.direction === "left" ? "-" + marquee.innerWrapper.width + "px" : marquee.container.width + "px"));
-                                break;
-                        }
+                        _prepareAnimateHorizontal();
                         break;
                 }
-
-                // fire event
-                marquee.container.element.trigger("beforeStarting");
-
+            };
+            
+            var _doAnimate = function()
+            {
                 // If css3 support is available than do it with css3, otherwise use jQuery as fallback
                 switch(marquee.animation.cssAnimationSupport)
                 {
@@ -555,10 +566,22 @@
                         });
                         break;
                 }
+            };
+
+            // Animate recursive method
+            var animate = function() {
+                
+                _prepareAnimate();
+
+                // fire event
+                marquee.container.element.trigger("beforeStarting");
+
+                _doAnimate();
                 
                 // save the status
                 marquee.container.element.data("runningStatus", "resumed");
             };
+            
             _init();
             _beforeAnimate(); // Prepare for animation
 
