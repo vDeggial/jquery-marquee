@@ -19,6 +19,107 @@
 		{
 			return this.each(function()
 			{
+				// Extend the options if any provided
+				var o = $.extend(
+					{}, $.fn.marquee.defaults, options),
+					data = {
+						marquee:
+						{
+							container:
+							{
+								element: null,
+								width: 0,
+								height: 0
+							},
+							outerWrapper:
+							{
+								element: null,
+								width: 0,
+								height: 0,
+								animationCss: ""
+							},
+							innerWrapper:
+							{
+								element: null,
+								width: 0,
+								height: 0
+							},
+							animation:
+							{
+								css: "",
+								loopCounter: 3,
+								cssPlayState: "animation-play-state",
+								cssAnimationSupport: false,
+								cssAnimationName: "",
+								cssAnimationString: "animation",
+								cssKeyframeString: ""
+							},
+							isVertical: false
+
+						}
+
+					};
+				var marquee = data.marquee;
+				marquee.container.element = $(this);
+                
+                // Public methods
+				var methods = {
+					pause: function()
+					{
+						if (marquee.animation.cssAnimationSupport && o.allowCss3Support)
+						{
+							marquee.outerWrapper.element.css(marquee.animation.cssPlayState, "paused");
+						}
+						else
+						{
+							// pause using pause plugin
+							if ($.fn.pause)
+							{
+								marquee.outerWrapper.element.pause();
+							}
+						}
+						// save the status
+						marquee.container.element.data("runningStatus", "paused");
+						// fire event
+						marquee.container.element.trigger("paused");
+					},
+
+					resume: function()
+					{
+						// resume using css3
+						if (marquee.animation.cssAnimationSupport && o.allowCss3Support)
+						{
+							marquee.outerWrapper.element.css(marquee.animation.cssPlayState, "running");
+						}
+						else
+						{
+							// resume using pause plugin
+							if ($.fn.resume)
+							{
+								marquee.outerWrapper.element.resume();
+							}
+						}
+						// save the status
+						marquee.container.element.data("runningStatus", "resumed");
+						// fire event
+						marquee.container.element.trigger("resumed");
+					},
+
+					toggle: function()
+					{
+						methods[marquee.container.element.data("runningStatus") === "resumed" ? "pause" : "resume"]();
+					},
+
+					destroy: function()
+					{
+						// Clear timer
+						clearTimeout(marquee.container.element.timer);
+						// Unbind all events
+						marquee.container.element.find("*").addBack().off();
+						// Just unwrap the elements that has been added using this plugin
+						marquee.container.element.html(marquee.container.element.find(".js-marquee:first").html());
+					}
+				};
 				// Private methods
 				function _prefixedEvent(element, type, callback)
 				{
@@ -623,108 +724,6 @@
 
 					return false;
 				}
-				
-				// Extend the options if any provided
-				var o = $.extend(
-					{}, $.fn.marquee.defaults, options),
-					data = {
-						marquee:
-						{
-							container:
-							{
-								element: null,
-								width: 0,
-								height: 0
-							},
-							outerWrapper:
-							{
-								element: null,
-								width: 0,
-								height: 0,
-								animationCss: ""
-							},
-							innerWrapper:
-							{
-								element: null,
-								width: 0,
-								height: 0
-							},
-							animation:
-							{
-								css: "",
-								loopCounter: 3,
-								cssPlayState: "animation-play-state",
-								cssAnimationSupport: false,
-								cssAnimationName: "",
-								cssAnimationString: "animation",
-								cssKeyframeString: ""
-							},
-							isVertical: false
-
-						}
-
-					};
-				var marquee = data.marquee;
-				marquee.container.element = $(this);
-                
-                // Public methods
-				var methods = {
-					pause: function()
-					{
-						if (marquee.animation.cssAnimationSupport && o.allowCss3Support)
-						{
-							marquee.outerWrapper.element.css(marquee.animation.cssPlayState, "paused");
-						}
-						else
-						{
-							// pause using pause plugin
-							if ($.fn.pause)
-							{
-								marquee.outerWrapper.element.pause();
-							}
-						}
-						// save the status
-						marquee.container.element.data("runningStatus", "paused");
-						// fire event
-						marquee.container.element.trigger("paused");
-					},
-
-					resume: function()
-					{
-						// resume using css3
-						if (marquee.animation.cssAnimationSupport && o.allowCss3Support)
-						{
-							marquee.outerWrapper.element.css(marquee.animation.cssPlayState, "running");
-						}
-						else
-						{
-							// resume using pause plugin
-							if ($.fn.resume)
-							{
-								marquee.outerWrapper.element.resume();
-							}
-						}
-						// save the status
-						marquee.container.element.data("runningStatus", "resumed");
-						// fire event
-						marquee.container.element.trigger("resumed");
-					},
-
-					toggle: function()
-					{
-						methods[marquee.container.element.data("runningStatus") === "resumed" ? "pause" : "resume"]();
-					},
-
-					destroy: function()
-					{
-						// Clear timer
-						clearTimeout(marquee.container.element.timer);
-						// Unbind all events
-						marquee.container.element.find("*").addBack().off();
-						// Just unwrap the elements that has been added using this plugin
-						marquee.container.element.html(marquee.container.element.find(".js-marquee:first").html());
-					}
-				};
 
 				// Check for methods
 				if (_checkForMethods())
