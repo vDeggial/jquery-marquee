@@ -667,48 +667,65 @@
 							break;
 					}
 				};
+				
+				var _bindEvents = function()
+				{
+				    // bind pause and resume events
+    				marquee.container.element.on({"pause": methods.pause, "resume": methods.resume });
+    
+    				if (o.pauseOnHover)
+    				{
+    					marquee.container.element.on({"mouseenter": methods.pause, "mouseleave": methods.resume });
+    				}
+				};
+				
+				var _startAnimation = function()
+				{
+				    // If css3 animation is supported than call animate method at once
+    				if (marquee.animation.cssAnimationSupport && o.allowCss3Support)
+    				{
+    					animate();
+    				}
+    				else
+    				{
+    					// Starts the recursive method
+    					_startAnimationWithDelay();
+    				}
+				};
+				
+				var _checkForMethods = function()
+				{
+				    // Check for methods
+    				if (typeof options === "string")
+    				{
+    					if ($.isFunction(methods[options]))
+    					{
+    						// Following two IF statements to support public methods
+    						if (!marquee.outerWrapper.element)
+    						{
+    							marquee.outerWrapper.element = marquee.container.element.find(".js-marquee-wrapper");
+    						}
+    						if (marquee.container.element.data("css3AnimationIsSupported") === true)
+    						{
+    							marquee.animation.cssAnimationSupport = true;
+    						}
+    						methods[options]();
+    					}
+    					return true;
+    				}
+    				
+    				return false;
+				}
 
 				// Check for methods
-				if (typeof options === "string")
+				if (_checkForMethods())
 				{
-					if ($.isFunction(methods[options]))
-					{
-						// Following two IF statements to support public methods
-						if (!marquee.outerWrapper.element)
-						{
-							marquee.outerWrapper.element = marquee.container.element.find(".js-marquee-wrapper");
-						}
-						if (marquee.container.element.data("css3AnimationIsSupported") === true)
-						{
-							marquee.animation.cssAnimationSupport = true;
-						}
-						methods[options]();
-					}
-					return;
+				    return;
 				}
 
 				_init();
-
-				// bind pause and resume events
-				marquee.container.element.on("pause", methods.pause);
-				marquee.container.element.on("resume", methods.resume);
-
-				if (o.pauseOnHover)
-				{
-					marquee.container.element.on("mouseenter", methods.pause);
-					marquee.container.element.on("mouseleave", methods.resume);
-				}
-
-				// If css3 animation is supported than call animate method at once
-				if (marquee.animation.cssAnimationSupport && o.allowCss3Support)
-				{
-					animate();
-				}
-				else
-				{
-					// Starts the recursive method
-					_startAnimationWithDelay();
-				}
+				_bindEvents();
+				_startAnimation();
 
 			});
 		}; // End of Plugin
@@ -739,4 +756,6 @@
 			// the marquee is visible initially positioned next to the border towards it will be moving
 			startVisible: false
 		};
-	}));
+
+	})
+);
