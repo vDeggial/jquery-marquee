@@ -68,22 +68,17 @@
 					var pfx = ["webkit", "moz", "MS", "o", ""];
 					for (var p = 0; p < pfx.length; p++)
 					{
-						if (!pfx[parseInt(p)])
+						if (!pfx[parseInt(p, 10)])
 						{
 							type = type.toLowerCase();
 						}
-						element.addEventListener(pfx[parseInt(p)] + type, callback, false);
+						element.addEventListener(pfx[parseInt(p, 10)] + type, callback, false);
 					}
 				};
 
 				var _objToString = function(obj)
 				{
 					return JSON.stringify(obj).replace(/\"/g, "");
-				};
-
-				var _startAnimationWithDelay = function()
-				{
-					marquee.container.element.timer = setTimeout(animate, o.delayBeforeStart);
 				};
 
 				// Public methods
@@ -563,6 +558,11 @@
 
 					// save the status
 					marquee.container.element.data("runningStatus", "resumed");
+				};
+				
+				var _startAnimationWithDelay = function()
+				{
+					marquee.container.element.timer = setTimeout(animate, o.delayBeforeStart);
 				};
 
 				var _init = function()
