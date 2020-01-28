@@ -30,20 +30,19 @@
                 };
 			var marquee = data.marquee;
 			marquee.container.element = $(this);
-            var 
                 
                 
 
                 // Private methods
-                _prefixedEvent = function(element, type, callback) {
+                var _prefixedEvent = function(element, type, callback) {
                     var pfx = ["webkit", "moz", "MS", "o", ""];
                     for (var p = 0; p < pfx.length; p++) {
                         if (!pfx[p]) type = type.toLowerCase();
                         element.addEventListener(pfx[p] + type, callback, false);
                     }
-                },
+                };
 
-                _objToString = function(obj) {
+                var _objToString = function(obj) {
                     var tabjson = [];
                     for (var p in obj) {
                         if (obj.hasOwnProperty(p)) {
@@ -52,14 +51,14 @@
                     }
                     tabjson.push();
                     return "{" + tabjson.join(",") + "}";
-                },
+                };
 
-                _startAnimationWithDelay = function() {
+                var _startAnimationWithDelay = function() {
                     marquee.container.element.timer = setTimeout(animate, o.delayBeforeStart);
-                },
+                };
 
                 // Public methods
-                methods = {
+                var methods = {
                     pause: function() {
                         if (marquee.animation.cssAnimationSupport && o.allowCss3Support) {
                             marquee.outerWrapper.element.css(marquee.animation.cssPlayState, "paused");
@@ -104,193 +103,132 @@
                         marquee.container.element.html(marquee.container.element.find(".js-marquee:first").html());
                     }
                 };
-                
-                var totalWidth = 0;
-                marquee.container.element.children().each(function(){
-                    totalWidth += $(this).outerWidth( true );
-                });
-
-            // Check for methods
-            if (typeof options === "string") {
-                if ($.isFunction(methods[options])) {
-                    // Following two IF statements to support public methods
-                    if (!marquee.outerWrapper.element) {
-                        marquee.outerWrapper.element = marquee.container.element.find(".js-marquee-wrapper");
-                    }
-                    if (marquee.container.element.data("marquee.animation.cssAnimationSupport") === true) {
-                        marquee.animation.cssAnimationSupport = true;
-                    }
-                    methods[options]();
-                }
-                return;
-            }
-
-            /* Check if element has data attributes. They have top priority
-               For details https://twitter.com/aamirafridi/status/403848044069679104 - Can't find a better solution :/
-               jQuery 1.3.2 doesn't support $.data().KEY hence writting the following */
-            var attr;
-            $.each(o, function(key) {
-                // Check if element has this data attribute
-                attr = marquee.container.element.attr("data-" + key);
-                if (typeof attr !== "undefined") {
-                    // Now check if value is boolean or not
-                    switch (attr) {
-                        case "true":
-                            attr = true;
-                            break;
-                        case "false":
-                            attr = false;
-                            break;
-                    }
-                    o[key] = attr;
-                }
-            });
-
-            // Reintroduce speed as an option. It calculates duration as a factor of the container width
-            // measured in pixels per second.
-            if (o.speed) {
-                o.duration = parseInt(marquee.container.element.width(), 10) / o.speed * 1000;
-            }
-
-            // Shortcut to see if direction is upward or downward
-            marquee.isVertical = o.direction === "up" || o.direction === "down";
-
-            // no gap if not duplicated
-            o.gap = o.duplicated ? parseInt(o.gap, 10) : 0;
-
-            // wrap inner content into a div
-            marquee.container.element.wrapInner("<div class='js-marquee'></div>");
-
-            // Make copy of the element
-            var $el = marquee.container.element.find(".js-marquee").css({
-                "margin-right": o.gap,
-                "float": "left"
-            });
             
-            totalWidth += (marquee.container.element.width() + 1000);
-
-            if (o.duplicated) {
-                $el.clone(true).appendTo(marquee.container.element);
-                totalWidth *= 2;
-            }
-
-            // wrap both inner elements into one div
-            marquee.container.element.wrapInner("<div style='width:" + totalWidth + "px' class='js-marquee-wrapper'></div>");
-
-            // Save the reference of the wrapper
-            marquee.outerWrapper.element = marquee.container.element.find(".js-marquee-wrapper");
-            
-            marquee.outerWrapper.element.css("will-change", "transform");
-
-            // If direction is up or down, get the height of main element
-            
-            switch (marquee.isVertical)
+            var _processDataAttributes = function()
             {
-                //Vertical Direction
-                case true:
-                    marquee.container.height = marquee.container.element.height();
-                    marquee.outerWrapper.element.removeAttr("style");
-                    marquee.container.element.height(marquee.container.height);
+                 /* Check if element has data attributes. They have top priority
+                   For details https://twitter.com/aamirafridi/status/403848044069679104 - Can't find a better solution :/
+                   jQuery 1.3.2 doesn't support $.data().KEY hence writting the following */
+                var attr;
+                $.each(o, function(key) {
+                    // Check if element has this data attribute
+                    attr = marquee.container.element.attr("data-" + key);
+                    if (typeof attr !== "undefined") {
+                        // Now check if value is boolean or not
+                        switch (attr) {
+                            case "true":
+                                attr = true;
+                                break;
+                            case "false":
+                                attr = false;
+                                break;
+                        }
+                        o[key] = attr;
+                    }
+                });
+            };
+            
+            var _initVertical = function()
+            {
+                marquee.container.height = marquee.container.element.height();
+                marquee.outerWrapper.element.removeAttr("style");
+                marquee.container.element.height(marquee.container.height);
                     
-                    // Change the CSS for js-marquee element
-                    marquee.container.element.find(".js-marquee").css({
+                // Change the CSS for js-marquee element
+                marquee.container.element.find(".js-marquee").css({
                         "float": "none",
                         "margin-bottom": o.gap,
                         "margin-right": 0
-                    });
+                });
                     
-                    // Remove bottom margin from 2nd element if duplicated
-                    switch(o.duplicated)
-                    {
-                        case true:
-            		        marquee.container.element.find(".js-marquee:last").css({"margin-bottom": 0});
-            		        break;
-                    }
-                    
-                    marquee.innerWrapper.height = marquee.container.element.find(".js-marquee:first").height() + o.gap;
-                    
-                    // adjust the animation duration according to the text length
-                    switch(o.startVisible && !o.duplicated)
-                    {
-                        case true:
-                            // Compute the complete animation duration and save it for later reference
-                            // formula is to: (Height of the text node + height of the main container / Height of the main container) * duration;
-                            o._completeDuration = ((parseInt(marquee.innerWrapper.height, 10) + parseInt(marquee.container.height, 10)) / parseInt(marquee.container.height, 10)) * o.duration;
-        
-                            // formula is to: (Height of the text node / height of the main container) * duration
-                            o.duration = (parseInt(marquee.innerWrapper.height, 10) / parseInt(marquee.container.height, 10)) * o.duration;
-                            break;
-                            
-                        case false:
-                            // formula is to: (Height of the text node + height of the main container / Height of the main container) * duration;
-                            o.duration = ((parseInt(marquee.innerWrapper.height, 10) + parseInt(marquee.container.height, 10)) / parseInt(marquee.container.height, 10)) * o.duration;
-                            break;
-                    }
-                    
-                    break;
-                    
-                //Horizontal Direction
-                case false:
-                    // Save the width of the each element so we can use it in animation
-                    marquee.innerWrapper.width = marquee.container.element.find(".js-marquee:first").width() + o.gap;
-                    
-                    // container width
-                    marquee.container.width = marquee.container.element.width();
-    
-                    // adjust the animation duration according to the text length
-                    switch(o.startVisible && !o.duplicated)
-                    {
-                        case true:
-                            // Compute the complete animation duration and save it for later reference
-                            // formula is to: (Width of the text node + width of the main container / Width of the main container) * duration;
-                            o._completeDuration = ((parseInt(marquee.innerWrapper.width, 10) + parseInt(marquee.container.width, 10)) / parseInt(marquee.container.width, 10)) * o.duration;
-        
-                            // (Width of the text node / width of the main container) * duration
-                            o.duration = (parseInt(marquee.innerWrapper.width, 10) / parseInt(marquee.container.width, 10)) * o.duration;
-                            break;
-                            
-                        case false:
-                            // formula is to: (Width of the text node + width of the main container / Width of the main container) * duration;
-                            o.duration = ((parseInt(marquee.innerWrapper.width, 10) + parseInt(marquee.container.width, 10)) / parseInt(marquee.container.width, 10)) * o.duration;
-                            break;
-                    }
-                    break;
-            }
-
-            // if duplicated then reduce the duration
-            if (o.duplicated) {
-                o.duration = o.duration / 2;
-            }
-
-            if (o.allowCss3Support) {
-                var elm = document.body || document.createElement("div");
-                    marquee.animation.cssAnimationName = "marqueeAnimation-" + Math.floor(Math.random() * 1e7);
-                    var domPrefixes = "Webkit Moz O ms Khtml".split(" ");
-
-                // Check css3 support
-                if (typeof elm.style.animation !== "undefined") {
-                    marquee.animation.cssKeyframeString = "@keyframes " + marquee.animation.cssAnimationName + " ";
-                    marquee.animation.cssAnimationSupport = true;
+                // Remove bottom margin from 2nd element if duplicated
+                switch(o.duplicated)
+                {
+                    case true:
+                        marquee.container.element.find(".js-marquee:last").css({"margin-bottom": 0});
+                        break;
                 }
-
-                if (marquee.animation.cssAnimationSupport === false) {
-                    for (var i = 0; i < domPrefixes.length; i++) {
-                        if (typeof elm.style[domPrefixes[i] + "marquee.animation.cssAnimationName"] !== "undefined") {
-                            var prefix = "-" + domPrefixes[i].toLowerCase() + "-";
-                            marquee.animation.cssAnimationString = prefix + marquee.animation.cssAnimationString;
-                            marquee.animation.cssPlayState = prefix + marquee.animation.cssPlayState;
-                            marquee.animation.cssKeyframeString = "@" + prefix + "keyframes " + marquee.animation.cssAnimationName + " ";
-                            marquee.animation.cssAnimationSupport = true;
-                            break;
+                    
+                marquee.innerWrapper.height = marquee.container.element.find(".js-marquee:first").height() + o.gap;
+                    
+                // adjust the animation duration according to the text length
+                switch(o.startVisible && !o.duplicated)
+                {
+                    case true:
+                        // Compute the complete animation duration and save it for later reference
+                        // formula is to: (Height of the text node + height of the main container / Height of the main container) * duration;
+                        o._completeDuration = ((parseInt(marquee.innerWrapper.height, 10) + parseInt(marquee.container.height, 10)) / parseInt(marquee.container.height, 10)) * o.duration;
+        
+                        // formula is to: (Height of the text node / height of the main container) * duration
+                        o.duration = (parseInt(marquee.innerWrapper.height, 10) / parseInt(marquee.container.height, 10)) * o.duration;
+                        break;
+                            
+                    case false:
+                        // formula is to: (Height of the text node + height of the main container / Height of the main container) * duration;
+                        o.duration = ((parseInt(marquee.innerWrapper.height, 10) + parseInt(marquee.container.height, 10)) / parseInt(marquee.container.height, 10)) * o.duration;
+                        break;
+                }
+            };
+            
+            var _initHorizontal = function()
+            {
+                // Save the width of the each element so we can use it in animation
+                marquee.innerWrapper.width = marquee.container.element.find(".js-marquee:first").width() + o.gap;
+                    
+                // container width
+                marquee.container.width = marquee.container.element.width();
+    
+                // adjust the animation duration according to the text length
+                switch(o.startVisible && !o.duplicated)
+                {
+                    case true:
+                        // Compute the complete animation duration and save it for later reference
+                        // formula is to: (Width of the text node + width of the main container / Width of the main container) * duration;
+                        o._completeDuration = ((parseInt(marquee.innerWrapper.width, 10) + parseInt(marquee.container.width, 10)) / parseInt(marquee.container.width, 10)) * o.duration;
+        
+                        // (Width of the text node / width of the main container) * duration
+                        o.duration = (parseInt(marquee.innerWrapper.width, 10) / parseInt(marquee.container.width, 10)) * o.duration;
+                        break;
+                            
+                    case false:
+                        // formula is to: (Width of the text node + width of the main container / Width of the main container) * duration;
+                        o.duration = ((parseInt(marquee.innerWrapper.width, 10) + parseInt(marquee.container.width, 10)) / parseInt(marquee.container.width, 10)) * o.duration;
+                        break;
+                }
+            };
+            
+            var _initCss3Support = function()
+            {
+                if (o.allowCss3Support) {
+                    var elm = document.body || document.createElement("div");
+                        marquee.animation.cssAnimationName = "marqueeAnimation-" + Math.floor(Math.random() * 1e7);
+                        var domPrefixes = "Webkit Moz O ms Khtml".split(" ");
+    
+                    // Check css3 support
+                    if (typeof elm.style.animation !== "undefined") {
+                        marquee.animation.cssKeyframeString = "@keyframes " + marquee.animation.cssAnimationName + " ";
+                        marquee.animation.cssAnimationSupport = true;
+                    }
+    
+                    if (marquee.animation.cssAnimationSupport === false) {
+                        for (var i = 0; i < domPrefixes.length; i++) {
+                            if (typeof elm.style[domPrefixes[i] + "marquee.animation.cssAnimationName"] !== "undefined") {
+                                var prefix = "-" + domPrefixes[i].toLowerCase() + "-";
+                                marquee.animation.cssAnimationString = prefix + marquee.animation.cssAnimationString;
+                                marquee.animation.cssPlayState = prefix + marquee.animation.cssPlayState;
+                                marquee.animation.cssKeyframeString = "@" + prefix + "keyframes " + marquee.animation.cssAnimationName + " ";
+                                marquee.animation.cssAnimationSupport = true;
+                                break;
+                            }
                         }
                     }
+    
+                    if (marquee.animation.cssAnimationSupport) {
+                        marquee.animation.css = marquee.animation.cssAnimationName + " " + o.duration / 1000 + "s " + o.delayBeforeStart / 1000 + "s infinite " + o.css3easing;
+                        marquee.container.element.data("css3AnimationIsSupported", true);
+                    }
                 }
-
-                if (marquee.animation.cssAnimationSupport) {
-                    marquee.animation.css = marquee.animation.cssAnimationName + " " + o.duration / 1000 + "s " + o.delayBeforeStart / 1000 + "s infinite " + o.css3easing;
-                    marquee.container.element.data("marquee.animation.cssAnimationSupport", true);
-                }
-            }
+            };
             
             var _generateCssData = function(property,value,prefix,suffix)
             {
@@ -361,35 +299,6 @@
             _rePositionHorizontally = function() {
                 _setElementCss(marquee.outerWrapper.element, (o.direction === "left" ? marquee.container.width + "px" : "-" + marquee.innerWrapper.width + "px"));
             };
-            
-            switch (true)
-            {
-                case o.duplicated:
-                    // if duplicated option is set to true than position the wrapper
-                    switch(marquee.isVertical)
-                    {
-                        case true:
-                            o.startVisible ? _setElementCss(marquee.outerWrapper.element, 0, true) : _setElementCss(marquee.outerWrapper.element, (o.direction === "up" ? marquee.container.height + "px" : "-" + ((marquee.innerWrapper.height * 2) - o.gap) + "px"), true);
-                            break;
-                            
-                        default:
-                            o.startVisible ? _setElementCss(marquee.outerWrapper.element, 0) : _setElementCss(marquee.outerWrapper.element, (o.direction === "left" ? marquee.container.width + "px" : "-" + ((marquee.innerWrapper.width * 2) - o.gap) + "px"));
-                            break;
-                    }
-    
-                    // If the text starts out visible we can skip the two initial loops
-                    marquee.animation.loopCounter = o.startVisible ? marquee.animation.loopCounter : 1;
-                    break;
-                    
-                case o.startVisible:
-                    // We only have two different loops if marquee is duplicated and starts visible
-                    marquee.animation.loopCounter = 2;
-                    break;
-                    
-                default:
-                    marquee.isVertical ? _rePositionVertically() : _rePositionHorizontally();
-                    break;
-            }
             
             var _prepareAnimateDuplicated = function()
             {
@@ -582,6 +491,121 @@
                 // save the status
                 marquee.container.element.data("runningStatus", "resumed");
             };
+            
+            var _init = function()
+            {
+                var totalWidth = 0;
+                marquee.container.element.children().each(function(){
+                    totalWidth += marquee.container.element.outerWidth( true );
+                });
+
+                _processDataAttributes();
+    
+                // Reintroduce speed as an option. It calculates duration as a factor of the container width
+                // measured in pixels per second.
+                if (o.speed) {
+                    o.duration = parseInt(marquee.container.element.width(), 10) / o.speed * 1000;
+                }
+    
+                // Shortcut to see if direction is upward or downward
+                marquee.isVertical = o.direction === "up" || o.direction === "down";
+    
+                // no gap if not duplicated
+                o.gap = o.duplicated ? parseInt(o.gap, 10) : 0;
+    
+                // wrap inner content into a div
+                marquee.container.element.wrapInner("<div class='js-marquee'></div>");
+    
+                // Make copy of the element
+                var $el = marquee.container.element.find(".js-marquee").css({
+                    "margin-right": o.gap,
+                    "float": "left"
+                });
+                
+                totalWidth += (marquee.container.element.width() + 1000);
+    
+                if (o.duplicated) {
+                    $el.clone(true).appendTo(marquee.container.element);
+                    totalWidth *= 2;
+                }
+    
+                // wrap both inner elements into one div
+                marquee.container.element.wrapInner("<div style='width:" + totalWidth + "px' class='js-marquee-wrapper'></div>");
+    
+                // Save the reference of the wrapper
+                marquee.outerWrapper.element = marquee.container.element.find(".js-marquee-wrapper");
+                
+                marquee.outerWrapper.element.css("will-change", "transform");
+    
+                // If direction is up or down, get the height of main element
+                
+                switch (marquee.isVertical)
+                {
+                    //Vertical Direction
+                    case true:
+                        _initVertical();
+                        
+                        break;
+                        
+                    //Horizontal Direction
+                    case false:
+                        _initHorizontal();
+                        break;
+                }
+    
+                // if duplicated then reduce the duration
+                if (o.duplicated) {
+                    o.duration = o.duration / 2;
+                }
+    
+                _initCss3Support();
+                
+                switch (true)
+                {
+                    case o.duplicated:
+                        // if duplicated option is set to true than position the wrapper
+                        switch(marquee.isVertical)
+                        {
+                            case true:
+                                o.startVisible ? _setElementCss(marquee.outerWrapper.element, 0, true) : _setElementCss(marquee.outerWrapper.element, (o.direction === "up" ? marquee.container.height + "px" : "-" + ((marquee.innerWrapper.height * 2) - o.gap) + "px"), true);
+                                break;
+                                
+                            default:
+                                o.startVisible ? _setElementCss(marquee.outerWrapper.element, 0) : _setElementCss(marquee.outerWrapper.element, (o.direction === "left" ? marquee.container.width + "px" : "-" + ((marquee.innerWrapper.width * 2) - o.gap) + "px"));
+                                break;
+                        }
+        
+                        // If the text starts out visible we can skip the two initial loops
+                        marquee.animation.loopCounter = o.startVisible ? marquee.animation.loopCounter : 1;
+                        break;
+                        
+                    case o.startVisible:
+                        // We only have two different loops if marquee is duplicated and starts visible
+                        marquee.animation.loopCounter = 2;
+                        break;
+                        
+                    default:
+                        marquee.isVertical ? _rePositionVertically() : _rePositionHorizontally();
+                        break;
+                }
+            };
+            
+            // Check for methods
+            if (typeof options === "string") {
+                if ($.isFunction(methods[options])) {
+                    // Following two IF statements to support public methods
+                    if (!marquee.outerWrapper.element) {
+                        marquee.outerWrapper.element = marquee.container.element.find(".js-marquee-wrapper");
+                    }
+                    if (marquee.container.element.data("css3AnimationIsSupported") === true) {
+                        marquee.animation.cssAnimationSupport = true;
+                    }
+                    methods[options]();
+                }
+                return;
+            }
+            
+            _init();
 
             // bind pause and resume events
             marquee.container.element.on("pause", methods.pause);
