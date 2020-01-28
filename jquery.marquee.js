@@ -19,51 +19,8 @@
 		{
 			return this.each(function()
 			{
-				// Extend the options if any provided
-				var o = $.extend(
-					{}, $.fn.marquee.defaults, options),
-					data = {
-						marquee:
-						{
-							container:
-							{
-								element: null,
-								width: 0,
-								height: 0
-							},
-							outerWrapper:
-							{
-								element: null,
-								width: 0,
-								height: 0,
-								animationCss: ""
-							},
-							innerWrapper:
-							{
-								element: null,
-								width: 0,
-								height: 0
-							},
-							animation:
-							{
-								css: "",
-								loopCounter: 3,
-								cssPlayState: "animation-play-state",
-								cssAnimationSupport: false,
-								cssAnimationName: "",
-								cssAnimationString: "animation",
-								cssKeyframeString: ""
-							},
-							isVertical: false
-
-						}
-
-					};
-				var marquee = data.marquee;
-				marquee.container.element = $(this);
-
 				// Private methods
-				var _prefixedEvent = function(element, type, callback)
+				function _prefixedEvent(element, type, callback)
 				{
 					var pfx = ["webkit", "moz", "MS", "o", ""];
 					for (var p = 0; p < pfx.length; p++)
@@ -74,73 +31,14 @@
 						}
 						element.addEventListener(pfx[parseInt(p, 10)] + type, callback, false);
 					}
-				};
+				}
 
-				var _objToString = function(obj)
+				function _objToString(obj)
 				{
 					return JSON.stringify(obj).replace(/\"/g, "");
-				};
+				}
 
-				// Public methods
-				var methods = {
-					pause: function()
-					{
-						if (marquee.animation.cssAnimationSupport && o.allowCss3Support)
-						{
-							marquee.outerWrapper.element.css(marquee.animation.cssPlayState, "paused");
-						}
-						else
-						{
-							// pause using pause plugin
-							if ($.fn.pause)
-							{
-								marquee.outerWrapper.element.pause();
-							}
-						}
-						// save the status
-						marquee.container.element.data("runningStatus", "paused");
-						// fire event
-						marquee.container.element.trigger("paused");
-					},
-
-					resume: function()
-					{
-						// resume using css3
-						if (marquee.animation.cssAnimationSupport && o.allowCss3Support)
-						{
-							marquee.outerWrapper.element.css(marquee.animation.cssPlayState, "running");
-						}
-						else
-						{
-							// resume using pause plugin
-							if ($.fn.resume)
-							{
-								marquee.outerWrapper.element.resume();
-							}
-						}
-						// save the status
-						marquee.container.element.data("runningStatus", "resumed");
-						// fire event
-						marquee.container.element.trigger("resumed");
-					},
-
-					toggle: function()
-					{
-						methods[marquee.container.element.data("runningStatus") === "resumed" ? "pause" : "resume"]();
-					},
-
-					destroy: function()
-					{
-						// Clear timer
-						clearTimeout(marquee.container.element.timer);
-						// Unbind all events
-						marquee.container.element.find("*").addBack().off();
-						// Just unwrap the elements that has been added using this plugin
-						marquee.container.element.html(marquee.container.element.find(".js-marquee:first").html());
-					}
-				};
-
-				var _processDataAttributes = function()
+				function _processDataAttributes()
 				{
 					/* Check if element has data attributes. They have top priority
 					  For details https://twitter.com/aamirafridi/status/403848044069679104 - Can't find a better solution :/
@@ -165,9 +63,9 @@
 							o[key] = attr;
 						}
 					});
-				};
+				}
 
-				var _initVertical = function()
+				function _initVertical()
 				{
 					marquee.container.height = marquee.container.element.height();
 					marquee.outerWrapper.element.removeAttr("style");
@@ -211,9 +109,9 @@
 							o.duration = ((parseInt(marquee.innerWrapper.height, 10) + parseInt(marquee.container.height, 10)) / parseInt(marquee.container.height, 10)) * o.duration;
 							break;
 					}
-				};
+				}
 
-				var _initHorizontal = function()
+				function _initHorizontal()
 				{
 					// Save the width of the each element so we can use it in animation
 					marquee.innerWrapper.width = marquee.container.element.find(".js-marquee:first").width() + o.gap;
@@ -238,9 +136,9 @@
 							o.duration = ((parseInt(marquee.innerWrapper.width, 10) + parseInt(marquee.container.width, 10)) / parseInt(marquee.container.width, 10)) * o.duration;
 							break;
 					}
-				};
+				}
 
-				var _initCss3Support = function()
+				function _initCss3Support()
 				{
 					if (o.allowCss3Support)
 					{
@@ -277,9 +175,9 @@
 							marquee.container.element.data("css3AnimationIsSupported", true);
 						}
 					}
-				};
+				}
 
-				var _generateCssData = function(property, value, prefix, suffix)
+				function _generateCssData(property, value, prefix, suffix)
 				{
 					prefix = prefix || "";
 					suffix = suffix || "";
@@ -291,9 +189,9 @@
 					value = prefix.concat(value, suffix);
 					data.value = value;
 					return data;
-				};
+				}
 
-				var _generateAnimationCss = function(value, vertical)
+				function _generateAnimationCss(value, vertical)
 				{
 					vertical = vertical || false;
 					var data = marquee.animation.cssAnimationSupport ? (vertical ? _generateCssData("transform", value, "translateY(", ")") : _generateCssData("transform", value, "translateX(", ")")) : (vertical ? _generateCssData("margin-top", value) : _generateCssData("margin-left", value));
@@ -302,16 +200,16 @@
 					var obj = {};
 					obj[property] = value;
 					return obj;
-				};
+				}
 
-				var _setElementCss = function(element, value, vertical)
+				function _setElementCss(element, value, vertical)
 				{
 					vertical = vertical || false;
 					var data = marquee.animation.cssAnimationSupport ? (vertical ? _generateCssData("transform", value, "translateY(", ")") : _generateCssData("transform", value, "translateX(", ")")) : (vertical ? _generateCssData("margin-top", value) : _generateCssData("margin-left", value));
 					element.css(data.property, data.value);
-				};
+				}
 
-				var _adjustAnimation = function()
+				function _adjustAnimation()
 				{
 					if (marquee.animation.css)
 					{
@@ -320,42 +218,43 @@
 						marquee.animation.css = marquee.animation.cssAnimationName + " " + o.duration / 1000 + "s 0s infinite " + o.css3easing;
 					}
 
-				};
+				}
 
-				var _adjustAnimationDelay = function()
+				function _adjustAnimationDelay()
 				{
 					if (marquee.animation.css)
 					{
 						marquee.animation.css = marquee.animation.cssAnimationName + " " + o.duration / 1000 + "s " + o.delayBeforeStart / 1000 + "s " + o.css3easing;
 					}
-				};
+				}
 
-				var _setInfiniteAnimation = function()
+				function _setInfiniteAnimation()
 				{
 					// Set the duration for the animation that will run forever
 					o.duration = o._completeDuration;
 					// Adjust the css3 animation as well
 					_adjustAnimation();
-				};
+				}
 
-				var _resetAnimation = function()
+				function _resetAnimation()
 				{
 					o.duration = o._originalDuration;
 					// Adjust the css3 animation as well
 					_adjustAnimation();
-				};
+				}
 
 
-				var _rePositionVertically = function()
-					{
-						_setElementCss(marquee.outerWrapper.element, (o.direction === "up" ? marquee.container.height + "px" : "-" + marquee.innerWrapper.height + "px"), true);
-					},
-					_rePositionHorizontally = function()
-					{
-						_setElementCss(marquee.outerWrapper.element, (o.direction === "left" ? marquee.container.width + "px" : "-" + marquee.innerWrapper.width + "px"));
-					};
+				function _rePositionVertically()
+				{
+					_setElementCss(marquee.outerWrapper.element, (o.direction === "up" ? marquee.container.height + "px" : "-" + marquee.innerWrapper.height + "px"), true);
+				}
+					
+				function _rePositionHorizontally()
+				{
+					_setElementCss(marquee.outerWrapper.element, (o.direction === "left" ? marquee.container.width + "px" : "-" + marquee.innerWrapper.width + "px"));
+				}
 
-				var _prepareAnimateDuplicated = function()
+				function _prepareAnimateDuplicated()
 				{
 					switch (o.duplicated)
 					{
@@ -387,9 +286,9 @@
 							}
 							break;
 					}
-				};
+				}
 
-				var _prepareAnimateVertical = function()
+				function _prepareAnimateVertical()
 				{
 					switch (true)
 					{
@@ -428,9 +327,9 @@
 							_rePositionVertically();
 							marquee.outerWrapper.animationCss = _generateAnimationCss((o.direction === "up" ? "-" + (marquee.outerWrapper.element.height()) + "px" : marquee.container.height + "px"), true);
 					}
-				};
+				}
 
-				var _prepareAnimateHorizontal = function()
+				function _prepareAnimateHorizontal()
 				{
 					switch (true)
 					{
@@ -470,9 +369,9 @@
 							marquee.outerWrapper.animationCss = _generateAnimationCss((o.direction === "left" ? "-" + marquee.innerWrapper.width + "px" : marquee.container.width + "px"));
 							break;
 					}
-				};
+				}
 
-				var _prepareAnimate = function()
+				function _prepareAnimate()
 				{
 					_prepareAnimateDuplicated();
 
@@ -488,9 +387,9 @@
 							_prepareAnimateHorizontal();
 							break;
 					}
-				};
+				}
 
-				var _doAnimate = function()
+				function _doAnimate()
 				{
 					// If css3 support is available than do it with css3, otherwise use jQuery as fallback
 					switch (marquee.animation.cssAnimationSupport)
@@ -543,10 +442,10 @@
 							});
 							break;
 					}
-				};
+				}
 
 				// Animate recursive method
-				var animate = function()
+				function animate()
 				{
 
 					_prepareAnimate();
@@ -558,14 +457,14 @@
 
 					// save the status
 					marquee.container.element.data("runningStatus", "resumed");
-				};
+				}
 				
-				var _startAnimationWithDelay = function()
+				function _startAnimationWithDelay()
 				{
 					marquee.container.element.timer = setTimeout(animate, o.delayBeforeStart);
-				};
+				}
 
-				var _init = function()
+				function _init()
 				{
 					var totalWidth = 0;
 					marquee.container.element.children().each(function()
@@ -666,9 +565,9 @@
 							marquee.isVertical ? _rePositionVertically() : _rePositionHorizontally();
 							break;
 					}
-				};
+				}
 
-				var _bindEvents = function()
+				function _bindEvents()
 				{
 					// bind pause and resume events
 					marquee.container.element.on(
@@ -685,9 +584,9 @@
 							"mouseleave": methods.resume
 						});
 					}
-				};
+				}
 
-				var _startAnimation = function()
+				function _startAnimation()
 				{
 					// If css3 animation is supported than call animate method at once
 					if (marquee.animation.cssAnimationSupport && o.allowCss3Support)
@@ -699,9 +598,9 @@
 						// Starts the recursive method
 						_startAnimationWithDelay();
 					}
-				};
+				}
 
-				var _checkForMethods = function()
+				function _checkForMethods()
 				{
 					// Check for methods
 					if (typeof options === "string")
@@ -724,6 +623,108 @@
 
 					return false;
 				}
+				
+				// Extend the options if any provided
+				var o = $.extend(
+					{}, $.fn.marquee.defaults, options),
+					data = {
+						marquee:
+						{
+							container:
+							{
+								element: null,
+								width: 0,
+								height: 0
+							},
+							outerWrapper:
+							{
+								element: null,
+								width: 0,
+								height: 0,
+								animationCss: ""
+							},
+							innerWrapper:
+							{
+								element: null,
+								width: 0,
+								height: 0
+							},
+							animation:
+							{
+								css: "",
+								loopCounter: 3,
+								cssPlayState: "animation-play-state",
+								cssAnimationSupport: false,
+								cssAnimationName: "",
+								cssAnimationString: "animation",
+								cssKeyframeString: ""
+							},
+							isVertical: false
+
+						}
+
+					};
+				var marquee = data.marquee;
+				marquee.container.element = $(this);
+                
+                // Public methods
+				var methods = {
+					pause: function()
+					{
+						if (marquee.animation.cssAnimationSupport && o.allowCss3Support)
+						{
+							marquee.outerWrapper.element.css(marquee.animation.cssPlayState, "paused");
+						}
+						else
+						{
+							// pause using pause plugin
+							if ($.fn.pause)
+							{
+								marquee.outerWrapper.element.pause();
+							}
+						}
+						// save the status
+						marquee.container.element.data("runningStatus", "paused");
+						// fire event
+						marquee.container.element.trigger("paused");
+					},
+
+					resume: function()
+					{
+						// resume using css3
+						if (marquee.animation.cssAnimationSupport && o.allowCss3Support)
+						{
+							marquee.outerWrapper.element.css(marquee.animation.cssPlayState, "running");
+						}
+						else
+						{
+							// resume using pause plugin
+							if ($.fn.resume)
+							{
+								marquee.outerWrapper.element.resume();
+							}
+						}
+						// save the status
+						marquee.container.element.data("runningStatus", "resumed");
+						// fire event
+						marquee.container.element.trigger("resumed");
+					},
+
+					toggle: function()
+					{
+						methods[marquee.container.element.data("runningStatus") === "resumed" ? "pause" : "resume"]();
+					},
+
+					destroy: function()
+					{
+						// Clear timer
+						clearTimeout(marquee.container.element.timer);
+						// Unbind all events
+						marquee.container.element.find("*").addBack().off();
+						// Just unwrap the elements that has been added using this plugin
+						marquee.container.element.html(marquee.container.element.find(".js-marquee:first").html());
+					}
+				};
 
 				// Check for methods
 				if (_checkForMethods())
