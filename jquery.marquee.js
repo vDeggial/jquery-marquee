@@ -244,7 +244,7 @@
 					if (o.allowCss3Support)
 					{
 						var elm = document.body || document.createElement("div");
-						marquee.animation.cssAnimationName = "marqueeAnimation-" + Math.floor(Math.random() * 1e7);
+						marquee.animation.cssAnimationName = "marqueeAnimation-" + Math.floor(Math.random() * 1e4);
 						var domPrefixes = "Webkit Moz O ms Khtml".split(" ");
 
 						// Check css3 support
