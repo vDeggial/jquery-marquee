@@ -616,7 +616,17 @@
 					}
 				}
 
-				function _createWrappers()
+				function _getTotalChildrenWidth()
+				{
+					var total = 0;
+					marquee.container.element.children().first().children().each(function()
+					{
+						total += $(this).outerWidth(true);
+					});
+					return total;
+				}
+
+				function _createInnerWrapper()
 				{
 					// wrap inner content into a div
 					marquee.container.element.wrapInner("<div class='js-marquee'></div>");
@@ -634,6 +644,16 @@
 					{
 						marquee.innerWrapper.element.clone(true).appendTo(marquee.container.element);
 					}
+				}
+
+				function _createOuterWrapper()
+				{
+					marquee.outerWrapper.width = _getTotalChildrenWidth();
+					marquee.outerWrapper.width += (marquee.container.element.width() + 1000);
+					if (o.duplicated)
+					{
+						marquee.outerWrapper.width *= 2;
+					}
 
 					// wrap both inner elements into one div
 					marquee.container.element.wrapInner("<div class='js-marquee-wrapper'></div>");
@@ -642,49 +662,65 @@
 					marquee.outerWrapper.element = marquee.container.element.find(".js-marquee-wrapper");
 
 					marquee.outerWrapper.element.css("will-change", "transform");
+					marquee.outerWrapper.element.css("width", marquee.outerWrapper.width + "px");
 				}
 
-				function _init()
+				function _createWrappers()
 				{
-					var totalWidth = 0;
-					marquee.container.element.children().each(function()
-					{
-						totalWidth += $(this).outerWidth(true);
-					});
+					_createInnerWrapper();
 
-					_processDataAttributes();
+					_createOuterWrapper();
 
+				}
+
+				function _processSpeed()
+				{
 					// Reintroduce speed as an option. It calculates duration as a factor of the container width
 					// measured in pixels per second.
 					if (o.speed)
 					{
 						o.duration = parseInt(marquee.container.element.width(), 10) / o.speed * 1000;
 					}
+				}
 
+				function _checkVertical()
+				{
 					// Shortcut to see if direction is upward or downward
 					marquee.isVertical = o.direction === "up" || o.direction === "down";
+				}
 
+				function _setGap()
+				{
 					// no gap if not duplicated
 					o.gap = o.duplicated ? parseInt(o.gap, 10) : 0;
+				}
 
-					totalWidth += (marquee.container.element.width() + 1000);
-
-					_createWrappers();
-
-					if (o.duplicated)
-					{
-						totalWidth *= 2;
-					}
-
-					marquee.outerWrapper.element.css("width", totalWidth + "px");
-
-					_initPosition();
-
+				function _adjustDurationDuplicated()
+				{
 					// if duplicated then reduce the duration
 					if (o.duplicated)
 					{
 						o.duration = o.duration / 2;
 					}
+				}
+
+
+				function _init()
+				{
+
+					_processDataAttributes();
+
+					_processSpeed();
+
+					_checkVertical();
+
+					_setGap();
+
+					_createWrappers();
+
+					_initPosition();
+
+					_adjustDurationDuplicated();
 
 					_initCss3Support();
 
