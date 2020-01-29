@@ -61,8 +61,8 @@
 					};
 				var marquee = data.marquee;
 				marquee.container.element = $(this);
-                
-                // Public methods
+
+				// Public methods
 				var methods = {
 					pause: function()
 					{
@@ -210,7 +210,7 @@
 				{
 					_setElementCss(marquee.outerWrapper.element, (o.direction === "up" ? marquee.container.height + "px" : "-" + marquee.innerWrapper.height + "px"), true);
 				}
-					
+
 				function _rePositionHorizontally()
 				{
 					_setElementCss(marquee.outerWrapper.element, (o.direction === "left" ? marquee.container.width + "px" : "-" + marquee.innerWrapper.width + "px"));
@@ -420,12 +420,12 @@
 					// save the status
 					marquee.container.element.data("runningStatus", "resumed");
 				}
-				
+
 				function _startAnimationWithDelay()
 				{
 					marquee.container.element.timer = setTimeout(animate, o.delayBeforeStart);
 				}
-				
+
 				function _processDataAttributes()
 				{
 					/* Check if element has data attributes. They have top priority
@@ -564,10 +564,10 @@
 						}
 					}
 				}
-				
+
 				function _initElementCss()
 				{
-				    switch (true)
+					switch (true)
 					{
 						case o.duplicated:
 							// if duplicated option is set to true than position the wrapper
@@ -596,10 +596,10 @@
 							break;
 					}
 				}
-				
+
 				function _initPosition()
 				{
-				    // If direction is up or down, get the height of main element
+					// If direction is up or down, get the height of main element
 
 					switch (marquee.isVertical)
 					{
@@ -615,16 +615,20 @@
 							break;
 					}
 				}
-				
+
 				function _createWrappers()
 				{
-				    // wrap inner content into a div
+					// wrap inner content into a div
 					marquee.container.element.wrapInner("<div class='js-marquee'></div>");
-					
+
 					marquee.innerWrapper.element = marquee.container.element.find(".js-marquee");
 
 					// Make copy of the element
-					marquee.innerWrapper.element.css( { "margin-right": o.gap, "float": "left" });
+					marquee.innerWrapper.element.css(
+					{
+						"margin-right": o.gap,
+						"float": "left"
+					});
 
 					if (o.duplicated)
 					{
@@ -647,7 +651,7 @@
 					{
 						totalWidth += $(this).outerWidth(true);
 					});
-					
+
 					_processDataAttributes();
 
 					// Reintroduce speed as an option. It calculates duration as a factor of the container width
@@ -662,16 +666,16 @@
 
 					// no gap if not duplicated
 					o.gap = o.duplicated ? parseInt(o.gap, 10) : 0;
-					
+
 					totalWidth += (marquee.container.element.width() + 1000);
 
 					_createWrappers();
-					
+
 					if (o.duplicated)
 					{
-					    totalWidth *= 2;
+						totalWidth *= 2;
 					}
-					
+
 					marquee.outerWrapper.element.css("width", totalWidth + "px");
 
 					_initPosition();
@@ -753,7 +757,6 @@
 				_init();
 				_bindEvents();
 				_startAnimation();
-
 			});
 		}; // End of Plugin
 		// Public: plugin defaults options
@@ -783,6 +786,5 @@
 			// the marquee is visible initially positioned next to the border towards it will be moving
 			startVisible: false
 		};
-
 	})
 );
