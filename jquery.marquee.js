@@ -458,7 +458,7 @@
 
 						if (marquee.animation.cssAnimationSupport === false) {
 							for (var i = 0; i < domPrefixes.length; i++) {
-								if (typeof elm.style[domPrefixes[i] + "marquee.animation.cssAnimationName"] !== "undefined") {
+								if (typeof elm.style[domPrefixes[parseInt(i, 10)] + "marquee.animation.cssAnimationName"] !== "undefined") {
 									var prefix = "-" + domPrefixes[i].toLowerCase() + "-";
 									marquee.animation.cssAnimationString = prefix + marquee.animation.cssAnimationString;
 									marquee.animation.cssPlayState = prefix + marquee.animation.cssPlayState;
