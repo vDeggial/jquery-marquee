@@ -3,7 +3,7 @@
  * @author Original: Aamir Afridi - aamirafridi(at)gmail(dot)com | Current: Deggial
  */
 (function(factory) {
-		if (typeof define === "function" && define.amd) {
+		if(typeof define === "function" && define.amd) {
 			define(["jquery"], factory);
 		} else {
 			factory(jQuery);
@@ -42,21 +42,18 @@
 								cssKeyframeString: ""
 							},
 							isVertical: false
-
 						}
-
 					};
 				var marquee = data.marquee;
 				marquee.container.element = $(this);
-
 				// Public methods
 				var methods = {
 					pause: function() {
-						if (marquee.animation.cssAnimationSupport && o.allowCss3Support) {
+						if(marquee.animation.cssAnimationSupport && o.allowCss3Support) {
 							marquee.outerWrapper.element.css(marquee.animation.cssPlayState, "paused");
 						} else {
 							// pause using pause plugin
-							if ($.fn.pause) {
+							if($.fn.pause) {
 								marquee.outerWrapper.element.pause();
 							}
 						}
@@ -65,14 +62,13 @@
 						// fire event
 						marquee.container.element.trigger("paused");
 					},
-
 					resume: function() {
 						// resume using css3
-						if (marquee.animation.cssAnimationSupport && o.allowCss3Support) {
+						if(marquee.animation.cssAnimationSupport && o.allowCss3Support) {
 							marquee.outerWrapper.element.css(marquee.animation.cssPlayState, "running");
 						} else {
 							// resume using pause plugin
-							if ($.fn.resume) {
+							if($.fn.resume) {
 								marquee.outerWrapper.element.resume();
 							}
 						}
@@ -81,11 +77,9 @@
 						// fire event
 						marquee.container.element.trigger("resumed");
 					},
-
 					toggle: function() {
 						methods[marquee.container.element.data("runningStatus") === "resumed" ? "pause" : "resume"]();
 					},
-
 					destroy: function() {
 						// Clear timer
 						clearTimeout(marquee.container.element.timer);
@@ -98,8 +92,8 @@
 				// Private methods
 				function _prefixedEvent(element, type, callback) {
 					var pfx = ["webkit", "moz", "MS", "o", ""];
-					for (var p = 0; p < pfx.length; p++) {
-						if (!pfx[parseInt(p, 10)]) {
+					for(var p = 0; p < pfx.length; p++) {
+						if(!pfx[parseInt(p, 10)]) {
 							type = type.toLowerCase();
 						}
 						element.addEventListener(pfx[parseInt(p, 10)] + type, callback, false);
@@ -140,16 +134,15 @@
 				}
 
 				function _adjustAnimation() {
-					if (marquee.animation.css) {
+					if(marquee.animation.css) {
 						marquee.animation.cssAnimationName = marquee.animation.cssAnimationName + "0";
 						marquee.animation.cssKeyframeString = $.trim(marquee.animation.cssKeyframeString) + "0 ";
 						marquee.animation.css = marquee.animation.cssAnimationName + " " + o.duration / 1000 + "s 0s infinite " + o.css3easing;
 					}
-
 				}
 
 				function _adjustAnimationDelay() {
-					if (marquee.animation.css) {
+					if(marquee.animation.css) {
 						marquee.animation.css = marquee.animation.cssAnimationName + " " + o.duration / 1000 + "s " + o.delayBeforeStart / 1000 + "s " + o.css3easing;
 					}
 				}
@@ -167,7 +160,6 @@
 					_adjustAnimation();
 				}
 
-
 				function _rePositionVertically() {
 					_setElementCss(marquee.outerWrapper.element, (o.direction === "up" ? marquee.container.height + "px" : "-" + marquee.innerWrapper.height + "px"), true);
 				}
@@ -177,24 +169,24 @@
 				}
 
 				function _prepareAnimateDuplicated() {
-					switch (o.duplicated) {
+					switch(o.duplicated) {
 						case true:
 							// When duplicated, the first loop will be scroll longer so double the duration
-							if (marquee.animation.loopCounter === 1) {
+							if(marquee.animation.loopCounter === 1) {
 								o._originalDuration = o.duration;
-								if (marquee.isVertical) {
+								if(marquee.isVertical) {
 									o.duration = o.direction === "up" ? o.duration + (marquee.container.height / ((marquee.innerWrapper.height) / o.duration)) : o.duration * 2;
 								} else {
 									o.duration = o.direction === "left" ? o.duration + (marquee.container.width / ((marquee.innerWrapper.width) / o.duration)) : o.duration * 2;
 								}
 								// Adjust the css3 animation as well
-								if (marquee.animation.css) {
+								if(marquee.animation.css) {
 									marquee.animation.css = marquee.animation.cssAnimationName + " " + o.duration / 1000 + "s " + o.delayBeforeStart / 1000 + "s " + o.css3easing;
 								}
 								marquee.animation.loopCounter++;
 							}
 							// On 2nd loop things back to normal, normal duration for the rest of animations
-							else if (marquee.animation.loopCounter === 2) {
+							else if(marquee.animation.loopCounter === 2) {
 								_resetAnimation();
 								marquee.animation.loopCounter++;
 							}
@@ -203,28 +195,23 @@
 				}
 
 				function _prepareAnimateVertical() {
-					switch (true) {
+					switch(true) {
 						case o.duplicated:
 							// Adjust the starting point of animation only when first loops finishes
-							if (marquee.animation.loopCounter > 2) {
+							if(marquee.animation.loopCounter > 2) {
 								_setElementCss(marquee.outerWrapper.element, (o.direction === "up" ? 0 : "-" + marquee.innerWrapper.height + "px"), true);
 							}
-
 							marquee.outerWrapper.animationCss = _generateAnimationCss((o.direction === "up" ? "-" + marquee.innerWrapper.height + "px" : 0), true);
 							break;
-
 						case o.startVisible:
-
-							switch (marquee.animation.loopCounter) {
+							switch(marquee.animation.loopCounter) {
 								// This loop moves the marquee out of the container
 								case 2:
 									// Adjust the css3 animation as well
 									_adjustAnimationDelay();
-
 									marquee.outerWrapper.animationCss = _generateAnimationCss((o.direction === "up" ? "-" + marquee.innerWrapper.height + "px" : marquee.container.height + "px"), true);
 									marquee.animation.loopCounter++;
 									break;
-
 								case 3:
 									// Set the duration for the animation that will run forever
 									_setInfiniteAnimation();
@@ -232,7 +219,6 @@
 									break;
 							}
 							break;
-
 						default:
 							_rePositionVertically();
 							marquee.outerWrapper.animationCss = _generateAnimationCss((o.direction === "up" ? "-" + (marquee.outerWrapper.element.height()) + "px" : marquee.container.height + "px"), true);
@@ -240,28 +226,24 @@
 				}
 
 				function _prepareAnimateHorizontal() {
-					switch (true) {
+					switch(true) {
 						case o.duplicated:
 							// Adjust the starting point of animation only when first loops finishes
-							if (marquee.animation.loopCounter > 2) {
+							if(marquee.animation.loopCounter > 2) {
 								_setElementCss(marquee.outerWrapper.element, (o.direction === "left" ? 0 : "-" + marquee.innerWrapper.width + "px"));
 							}
-
 							marquee.outerWrapper.animationCss = _generateAnimationCss((o.direction === "left" ? "-" + marquee.innerWrapper.width + "px" : 0));
 							break;
-
 						case o.startVisible:
 							o.duration = o._originalDuration;
-							switch (marquee.animation.loopCounter) {
+							switch(marquee.animation.loopCounter) {
 								// This loop moves the marquee out of the container
 								case 2:
 									// Adjust the css3 animation as well
 									_adjustAnimationDelay();
-
 									marquee.outerWrapper.animationCss = _generateAnimationCss((o.direction === "left" ? "-" + marquee.innerWrapper.width + "px" : marquee.container.width + "px"));
 									marquee.animation.loopCounter++;
 									break;
-
 								case 3:
 									// Set the duration for the animation that will run forever
 									_setInfiniteAnimation();
@@ -269,7 +251,6 @@
 									break;
 							}
 							break;
-
 						default:
 							_rePositionHorizontally();
 							marquee.outerWrapper.animationCss = _generateAnimationCss((o.direction === "left" ? "-" + marquee.innerWrapper.width + "px" : marquee.container.width + "px"));
@@ -279,13 +260,11 @@
 
 				function _prepareAnimate() {
 					_prepareAnimateDuplicated();
-
-					switch (marquee.isVertical) {
+					switch(marquee.isVertical) {
 						//Vertical Direction
 						case true:
 							_prepareAnimateVertical();
 							break;
-
 							//Horizontal Direction
 						default:
 							_prepareAnimateHorizontal();
@@ -293,60 +272,60 @@
 					}
 				}
 
+				function _doAnimateCss() {
+					// Add css3 animation to the element
+					marquee.outerWrapper.element.css(marquee.animation.cssAnimationString, marquee.animation.css);
+					var keyframeCss = marquee.animation.cssKeyframeString + " { 100%  " + _objToString(marquee.outerWrapper.animationCss) + "}",
+						$styles = marquee.outerWrapper.element.find("style");
+					// Now add the keyframe animation to the marquee element
+					if($styles.length !== 0) {
+						// Bug fixed for jQuery 1.3.x - Instead of using .last(), use following
+						$styles.filter(":last").html(keyframeCss);
+					} else {
+						$("head").append("<style>" + keyframeCss + "</style>");
+					}
+					// Animation iteration event
+					_prefixedEvent(marquee.outerWrapper.element[0], "AnimationIteration", function() {
+						marquee.container.element.trigger("finished");
+					});
+					// Animation stopped
+					_prefixedEvent(marquee.outerWrapper.element[0], "AnimationEnd", function() {
+						animate();
+						marquee.container.element.trigger("finished");
+					});
+				}
+
+				function _doAnimateJQuery() {
+					// Start animating
+					marquee.outerWrapper.element.animate(marquee.outerWrapper.animationCss, o.duration, o.easing, function() {
+						// fire event
+						marquee.container.element.trigger("finished");
+						// animate again
+						if(o.pauseOnCycle) {
+							startAnimationWithDelay();
+						} else {
+							animate();
+						}
+					});
+				}
+
 				function _doAnimate() {
 					// If css3 support is available than do it with css3, otherwise use jQuery as fallback
-					switch (marquee.animation.cssAnimationSupport) {
+					switch(marquee.animation.cssAnimationSupport) {
 						case true:
-							// Add css3 animation to the element
-							marquee.outerWrapper.element.css(marquee.animation.cssAnimationString, marquee.animation.css);
-							var keyframeCss = marquee.animation.cssKeyframeString + " { 100%  " + _objToString(marquee.outerWrapper.animationCss) + "}",
-								$styles = marquee.outerWrapper.element.find("style");
-
-							// Now add the keyframe animation to the marquee element
-							if ($styles.length !== 0) {
-								// Bug fixed for jQuery 1.3.x - Instead of using .last(), use following
-								$styles.filter(":last").html(keyframeCss);
-							} else {
-								$("head").append("<style>" + keyframeCss + "</style>");
-							}
-
-							// Animation iteration event
-							_prefixedEvent(marquee.outerWrapper.element[0], "AnimationIteration", function() {
-								marquee.container.element.trigger("finished");
-							});
-							// Animation stopped
-							_prefixedEvent(marquee.outerWrapper.element[0], "AnimationEnd", function() {
-								animate();
-								marquee.container.element.trigger("finished");
-							});
+							_doAnimateCss();
 							break;
-
 						default:
-							// Start animating
-							marquee.outerWrapper.element.animate(marquee.outerWrapper.animationCss, o.duration, o.easing, function() {
-								// fire event
-								marquee.container.element.trigger("finished");
-								// animate again
-								if (o.pauseOnCycle) {
-									_startAnimationWithDelay();
-								} else {
-									animate();
-								}
-							});
+							_doAnimateJQuery();
 							break;
 					}
 				}
-
 				// Animate recursive method
 				function animate() {
-
 					_prepareAnimate();
-
 					// fire event
 					marquee.container.element.trigger("beforeStarting");
-
 					_doAnimate();
-
 					// save the status
 					marquee.container.element.data("runningStatus", "resumed");
 				}
@@ -363,9 +342,9 @@
 					$.each(o, function(key) {
 						// Check if element has this data attribute
 						attr = marquee.container.element.attr("data-" + key);
-						if (typeof attr !== "undefined") {
+						if(typeof attr !== "undefined") {
 							// Now check if value is boolean or not
-							switch (attr) {
+							switch(attr) {
 								case "true":
 									attr = true;
 									break;
@@ -382,36 +361,30 @@
 					marquee.container.height = marquee.container.element.height();
 					marquee.outerWrapper.element.removeAttr("style");
 					marquee.container.element.height(marquee.container.height);
-
 					// Change the CSS for js-marquee element
 					marquee.container.element.find(".js-marquee").css({
 						"float": "none",
 						"margin-bottom": o.gap,
 						"margin-right": 0
 					});
-
 					// Remove bottom margin from 2nd element if duplicated
-					switch (o.duplicated) {
+					switch(o.duplicated) {
 						case true:
 							marquee.container.element.find(".js-marquee:last").css({
 								"margin-bottom": 0
 							});
 							break;
 					}
-
 					marquee.innerWrapper.height = marquee.container.element.find(".js-marquee:first").height() + o.gap;
-
 					// adjust the animation duration according to the text length
-					switch (o.startVisible && !o.duplicated) {
+					switch(o.startVisible && !o.duplicated) {
 						case true:
 							// Compute the complete animation duration and save it for later reference
 							// formula is to: (Height of the text node + height of the main container / Height of the main container) * duration;
 							o._completeDuration = ((parseInt(marquee.innerWrapper.height, 10) + parseInt(marquee.container.height, 10)) / parseInt(marquee.container.height, 10)) * o.duration;
-
 							// formula is to: (Height of the text node / height of the main container) * duration
 							o.duration = (parseInt(marquee.innerWrapper.height, 10) / parseInt(marquee.container.height, 10)) * o.duration;
 							break;
-
 						case false:
 							// formula is to: (Height of the text node + height of the main container / Height of the main container) * duration;
 							o.duration = ((parseInt(marquee.innerWrapper.height, 10) + parseInt(marquee.container.height, 10)) / parseInt(marquee.container.height, 10)) * o.duration;
@@ -422,21 +395,17 @@
 				function _initHorizontal() {
 					// Save the width of the each element so we can use it in animation
 					marquee.innerWrapper.width = marquee.container.element.find(".js-marquee:first").width() + o.gap;
-
 					// container width
 					marquee.container.width = marquee.container.element.width();
-
 					// adjust the animation duration according to the text length
-					switch (o.startVisible && !o.duplicated) {
+					switch(o.startVisible && !o.duplicated) {
 						case true:
 							// Compute the complete animation duration and save it for later reference
 							// formula is to: (Width of the text node + width of the main container / Width of the main container) * duration;
 							o._completeDuration = ((parseInt(marquee.innerWrapper.width, 10) + parseInt(marquee.container.width, 10)) / parseInt(marquee.container.width, 10)) * o.duration;
-
 							// (Width of the text node / width of the main container) * duration
 							o.duration = (parseInt(marquee.innerWrapper.width, 10) / parseInt(marquee.container.width, 10)) * o.duration;
 							break;
-
 						case false:
 							// formula is to: (Width of the text node + width of the main container / Width of the main container) * duration;
 							o.duration = ((parseInt(marquee.innerWrapper.width, 10) + parseInt(marquee.container.width, 10)) / parseInt(marquee.container.width, 10)) * o.duration;
@@ -445,20 +414,18 @@
 				}
 
 				function _initCss3Support() {
-					if (o.allowCss3Support) {
+					if(o.allowCss3Support) {
 						var elm = document.body || document.createElement("div");
 						marquee.animation.cssAnimationName = "marqueeAnimation-" + Math.floor(Math.random() * 1e4);
 						var domPrefixes = "Webkit Moz O ms Khtml".split(" ");
-
 						// Check css3 support
-						if (typeof elm.style.animation !== "undefined") {
+						if(typeof elm.style.animation !== "undefined") {
 							marquee.animation.cssKeyframeString = "@keyframes " + marquee.animation.cssAnimationName + " ";
 							marquee.animation.cssAnimationSupport = true;
 						}
-
-						if (marquee.animation.cssAnimationSupport === false) {
-							for (var i = 0; i < domPrefixes.length; i++) {
-								if (typeof elm.style[domPrefixes[parseInt(i, 10)] + "marquee.animation.cssAnimationName"] !== "undefined") {
+						if(marquee.animation.cssAnimationSupport === false) {
+							for(var i = 0; i < domPrefixes.length; i++) {
+								if(typeof elm.style[domPrefixes[parseInt(i, 10)] + "marquee.animation.cssAnimationName"] !== "undefined") {
 									var prefix = "-" + domPrefixes[i].toLowerCase() + "-";
 									marquee.animation.cssAnimationString = prefix + marquee.animation.cssAnimationString;
 									marquee.animation.cssPlayState = prefix + marquee.animation.cssPlayState;
@@ -468,8 +435,7 @@
 								}
 							}
 						}
-
-						if (marquee.animation.cssAnimationSupport) {
+						if(marquee.animation.cssAnimationSupport) {
 							marquee.animation.css = marquee.animation.cssAnimationName + " " + o.duration / 1000 + "s " + o.delayBeforeStart / 1000 + "s infinite " + o.css3easing;
 							marquee.container.element.data("css3AnimationIsSupported", true);
 						}
@@ -477,28 +443,24 @@
 				}
 
 				function _initElementCss() {
-					switch (true) {
+					switch(true) {
 						case o.duplicated:
 							// if duplicated option is set to true than position the wrapper
-							switch (marquee.isVertical) {
+							switch(marquee.isVertical) {
 								case true:
 									o.startVisible ? _setElementCss(marquee.outerWrapper.element, 0, true) : _setElementCss(marquee.outerWrapper.element, (o.direction === "up" ? marquee.container.height + "px" : "-" + ((marquee.innerWrapper.height * 2) - o.gap) + "px"), true);
 									break;
-
 								default:
 									o.startVisible ? _setElementCss(marquee.outerWrapper.element, 0) : _setElementCss(marquee.outerWrapper.element, (o.direction === "left" ? marquee.container.width + "px" : "-" + ((marquee.innerWrapper.width * 2) - o.gap) + "px"));
 									break;
 							}
-
 							// If the text starts out visible we can skip the two initial loops
 							marquee.animation.loopCounter = o.startVisible ? marquee.animation.loopCounter : 1;
 							break;
-
 						case o.startVisible:
 							// We only have two different loops if marquee is duplicated and starts visible
 							marquee.animation.loopCounter = 2;
 							break;
-
 						default:
 							marquee.isVertical ? _rePositionVertically() : _rePositionHorizontally();
 							break;
@@ -507,14 +469,11 @@
 
 				function _initPosition() {
 					// If direction is up or down, get the height of main element
-
-					switch (marquee.isVertical) {
+					switch(marquee.isVertical) {
 						//Vertical Direction
 						case true:
 							_initVertical();
-
 							break;
-
 							//Horizontal Direction
 						case false:
 							_initHorizontal();
@@ -533,16 +492,13 @@
 				function _createInnerWrapper() {
 					// wrap inner content into a div
 					marquee.container.element.wrapInner("<div class='js-marquee'></div>");
-
 					marquee.innerWrapper.element = marquee.container.element.find(".js-marquee");
-
 					// Make copy of the element
 					marquee.innerWrapper.element.css({
 						"margin-right": o.gap,
 						"float": "left"
 					});
-
-					if (o.duplicated) {
+					if(o.duplicated) {
 						marquee.innerWrapper.element.clone(true).appendTo(marquee.container.element);
 					}
 				}
@@ -550,31 +506,26 @@
 				function _createOuterWrapper() {
 					marquee.outerWrapper.width = _getTotalChildrenWidth();
 					marquee.outerWrapper.width += (marquee.container.element.width() + 1000);
-					if (o.duplicated) {
+					if(o.duplicated) {
 						marquee.outerWrapper.width *= 2;
 					}
-
 					// wrap both inner elements into one div
 					marquee.container.element.wrapInner("<div class='js-marquee-wrapper'></div>");
-
 					// Save the reference of the wrapper
 					marquee.outerWrapper.element = marquee.container.element.find(".js-marquee-wrapper");
-
 					marquee.outerWrapper.element.css("will-change", "transform");
 					marquee.outerWrapper.element.css("width", marquee.outerWrapper.width + "px");
 				}
 
 				function _createWrappers() {
 					_createInnerWrapper();
-
 					_createOuterWrapper();
-
 				}
 
 				function _processSpeed() {
 					// Reintroduce speed as an option. It calculates duration as a factor of the container width
 					// measured in pixels per second.
-					if (o.speed) {
+					if(o.speed) {
 						o.duration = parseInt(marquee.container.element.width(), 10) / o.speed * 1000;
 					}
 				}
@@ -591,29 +542,20 @@
 
 				function _adjustDurationDuplicated() {
 					// if duplicated then reduce the duration
-					if (o.duplicated) {
+					if(o.duplicated) {
 						o.duration = o.duration / 2;
 					}
 				}
 
 				function _init() {
-
 					_processDataAttributes();
-
 					_processSpeed();
-
 					_checkVertical();
-
 					_setGap();
-
 					_createWrappers();
-
 					_initPosition();
-
 					_adjustDurationDuplicated();
-
 					_initCss3Support();
-
 					_initElementCss();
 				}
 
@@ -623,8 +565,7 @@
 						"pause": methods.pause,
 						"resume": methods.resume
 					});
-
-					if (o.pauseOnHover) {
+					if(o.pauseOnHover) {
 						marquee.container.element.on({
 							"mouseenter": methods.pause,
 							"mouseleave": methods.resume
@@ -634,7 +575,7 @@
 
 				function _startAnimation() {
 					// If css3 animation is supported than call animate method at once
-					if (marquee.animation.cssAnimationSupport && o.allowCss3Support) {
+					if(marquee.animation.cssAnimationSupport && o.allowCss3Support) {
 						animate();
 					} else {
 						// Starts the recursive method
@@ -644,28 +585,25 @@
 
 				function _checkForMethods() {
 					// Check for methods
-					if (typeof options === "string") {
-						if ($.isFunction(methods[options])) {
+					if(typeof options === "string") {
+						if($.isFunction(methods[options])) {
 							// Following two IF statements to support public methods
-							if (!marquee.outerWrapper.element) {
+							if(!marquee.outerWrapper.element) {
 								marquee.outerWrapper.element = marquee.container.element.find(".js-marquee-wrapper");
 							}
-							if (marquee.container.element.data("css3AnimationIsSupported") === true) {
+							if(marquee.container.element.data("css3AnimationIsSupported") === true) {
 								marquee.animation.cssAnimationSupport = true;
 							}
 							methods[options]();
 						}
 						return true;
 					}
-
 					return false;
 				}
-
 				// Check for methods
-				if (_checkForMethods()) {
+				if(_checkForMethods()) {
 					return;
 				}
-
 				_init();
 				_bindEvents();
 				_startAnimation();
@@ -698,5 +636,4 @@
 			// the marquee is visible initially positioned next to the border towards it will be moving
 			startVisible: false
 		};
-	})
-);
+	}));
