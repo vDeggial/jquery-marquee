@@ -426,7 +426,7 @@
 						if(marquee.animation.cssAnimationSupport === false) {
 							for(var i = 0; i < domPrefixes.length; i++) {
 								if(typeof elm.style[domPrefixes[parseInt(i, 10)] + "marquee.animation.cssAnimationName"] !== "undefined") {
-									var prefix = "-" + domPrefixes[i].toLowerCase() + "-";
+									var prefix = "-" + domPrefixes[parseInt(i, 10)].toLowerCase() + "-";
 									marquee.animation.cssAnimationString = prefix + marquee.animation.cssAnimationString;
 									marquee.animation.cssPlayState = prefix + marquee.animation.cssPlayState;
 									marquee.animation.cssKeyframeString = "@" + prefix + "keyframes " + marquee.animation.cssAnimationName + " ";
