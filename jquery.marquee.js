@@ -302,7 +302,7 @@
 						marquee.container.element.trigger("finished");
 						// animate again
 						if(o.pauseOnCycle) {
-							startAnimationWithDelay();
+							_startAnimationWithDelay();
 						} else {
 							animate();
 						}
