@@ -1,14 +1,14 @@
 {
   "name": "jquery.marquee",
-  "version": "1.5.2",
-  "description": "jQuery plugin to scroll the text like the old traditional marquee http://aamirafridi.com/jquery/jquery-marquee-plugin — Edit",
+  "version": "1.6.0",
+  "description": "jQuery plugin to scroll the text like the old traditional marquee https://github.com/vDeggial/jquery-marquee — Edit",
   "main": "jquery.marquee.min.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aamirafridi/jQuery.Marquee.git"
+    "url": "git+https://github.com/vDeggial/jquery-marquee.git"
   },
   "keywords": [
     "jquery-plugin",
@@ -18,10 +18,10 @@
     "css3",
     "animation"
   ],
-  "author": "aamirafridi@gmail.com",
+  "author": "okravenkov@gmail.com",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/aamirafridi/jQuery.Marquee/issues"
+    "url": "https://github.com/vDeggial/jquery-marquee/issues"
   },
-  "homepage": "https://github.com/aamirafridi/jQuery.Marquee#readme"
+  "homepage": "https://github.com/vDeggial/jquery-marquee"
 }
