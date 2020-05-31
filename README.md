@@ -12,7 +12,7 @@ Install:
 ```html
 <script src="jquery.marquee.min.js" type="text/javascript"></script>
 ```
-- **Download:** [zip](https://snyk.io/test/github/vDeggial/jquery-marquee/archive/master.zip)
+- **Download:** [zip](https://github.com/vDeggial/jquery-marquee/archive/master.zip)
 
 Links:
 -----
