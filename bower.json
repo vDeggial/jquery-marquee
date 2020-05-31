@@ -3,7 +3,7 @@
   "description": "jQuery plugin to scroll the text like the old traditional marquee https://github.com/vDeggial/jquery-marquee",
   "main": "jquery.marquee.min.js",
   "authors": [
-    "aamirafridi@gmail.com".
+    "aamirafridi@gmail.com",
     "okravenkov@gmail.com"
   ],
   "license": "ISC",
