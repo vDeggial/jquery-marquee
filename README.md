@@ -1,8 +1,7 @@
-# This plugin/repo is looking for a maintainer. Please email aamirafridi@gmail.com if you are interested.
+# This plugin is a new reworfked version of https://github.com/aamirafridi/jQuery.Marquee
 
 
-# jQuery-Marquee with CSS3 Support [![Known Vulnerabilities](https://snyk.io/test/github/aamirafridi/jquery.marquee/badge.svg?targetFile=package.json)](https://snyk.io/test/github/aamirafridi/jquery.marquee?targetFile=package.json)
-[![](https://data.jsdelivr.com/v1/package/npm/jquery.marquee/badge)](https://www.jsdelivr.com/package/npm/jquery.marquee)
+# jQuery-Marquee with CSS3 Support [![Known Vulnerabilities](https://snyk.io/test/github/vDeggial/jquery-marquee/badge.svg?targetFile=package.json)](https://snyk.io/test/github/vDeggial/jquery-marquee?targetFile=package.json)
 
 ----
 
@@ -10,17 +9,14 @@ A **~8 KB** (minified) jQuery plugin to scroll the text like the old traditional
 
 Install:
 ----
- - **NPM:** `npm install jquery.marquee --save`
- - **CDN:** [jsdelivr.com](http://www.jsdelivr.com/#!jquery.marquee)
 ```html
-<script src="//cdn.jsdelivr.net/npm/jquery.marquee@1.5.0/jquery.marquee.min.js" type="text/javascript"></script>
+<script src="jquery.marquee.min.js" type="text/javascript"></script>
 ```
-- **Bower**: `bower install jQuery.Marquee`
-- **Download:** [zip](https://github.com/aamirafridi/jQuery.Marquee/archive/master.zip)
+- **Download:** [zip](https://snyk.io/test/github/vDeggial/jquery-marquee/archive/master.zip)
 
 Links:
 -----
- - **Demo:** http://aamirafridi.com/jquery/jquery-marquee-plugin#examples
+ - **Old Demo:** http://aamirafridi.com/jquery/jquery-marquee-plugin#examples
  - **jsFiddle:** http://jsfiddle.net/aamir/jc7F3/285/ to help you explain any issues you might face.
 
 Options:
@@ -169,6 +165,9 @@ $(window).load(function() {
 
 Updates:
 -----------
+
+**Update (2020):**
+I am now maintainer and developer of this plugin. I have reworked the code to make it look, feel and work a bit better. It works exacly the same as the old pluigin
 
 **Update (8 Mar 2016):**
 Now plugin have new option: **startVisible** The marquee will be visible in the start if set to `true`. Thanks to @nuke-ellington 👍
