@@ -1,7 +1,7 @@
 # This plugin is a new reworked version of [this](https://github.com/aamirafridi/jQuery.Marquee)
 
 
-# jQuery-Marquee with CSS3 Support [![Known Vulnerabilities](https://snyk.io/test/github/vDeggial/jquery-marquee/badge.svg?targetFile=package.json)](https://snyk.io/test/github/vDeggial/jquery-marquee?targetFile=package.json)
+# jQuery-Marquee with CSS3 Support
 
 ----
 
