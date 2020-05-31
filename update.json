@@ -1,8 +1,0 @@
-{
-  "packageManager": "github",
-  "name": "jquery-marquee",
-  "repo": "vDeggial/jquery-marquee",
-  "files": {
-    "include": ["*.js"]
-  }
-}
